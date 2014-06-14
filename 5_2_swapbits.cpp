@@ -10,4 +10,5 @@ long swapPosition(long x, int i,int j){
 
 int main(){
 	cout<<swapPosition(42,2,3)<<endl;
+	cout<<swapPosition(10,1,2)<<endl;
 }
