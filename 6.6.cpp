@@ -2,16 +2,15 @@
 #include<vector>
 using namespace std;
 
-int removeElement(vector<int> &vec, int k){
-	int m=0;
-	for(int i=0;i<vec.size();i++){
-		if(vec[i]!=k){
-			vec[m++]=vec[i];
+int removeDuplicated(vector<int> &vec){
+	int i=0;
+	for(int j=1;j<vec.size();j++){
+		if(vec[i]!=vec[j]){
+			vec[++i]=vec[j];
 		}
 	}
-	return m;
+	return i+1;
 }
-
 
 int main(){
 	vector<int> input;
@@ -19,9 +18,9 @@ int main(){
 	input.push_back(2);
 	input.push_back(3);
 	input.push_back(3);
-	input.push_back(5);
-	input.push_back(6);
-	cout<<removeElement(input,3)<<endl;
+	input.push_back(3);
+	input.push_back(3);
+	cout<<removeDuplicated(input)<<endl;
 	for(int x:input)
 		cout<<x<<",";
 }
