@@ -35,6 +35,18 @@ private:
 	vector<char> digits_;
 };
 
+void removeElement(vector<int> &vec, int k){
+	int m=0;
+	for(int i=0;i<vec.size();i++){
+		if(vec[i]!=k){
+			vec[m++]=vec[i];
+		}
+	}
+	vec[m]=0;
+}
+
+
+
 int main(){
 
 }
