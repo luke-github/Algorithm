@@ -65,7 +65,7 @@ int removeDuplicated(vector<int> &vec){
 	return i+1;
 }
 int main(){
-
+	cout<<"hello";
 }
 
 
