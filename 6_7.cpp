@@ -20,9 +20,8 @@ int findFristMissing(vector<int> &A){
 }
 
 int main(){
-	cout<<"hi";
 	vector<int> input;
-	input.push_back(1);
+	input.push_back(2);
 	input.push_back(3);
 	input.push_back(10);
 	input.push_back(5);

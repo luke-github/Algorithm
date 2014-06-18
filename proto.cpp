@@ -51,24 +51,68 @@
 
 // }
 
+// #include<iostream>
+// #include<vector>
+// using namespace std;
+
+// int removeDuplicated(vector<int> &vec){
+// 	int i=0;
+// 	for(int j=1;j<vec.size();j++){
+// 		if(vec[i]!=vec[j]){
+// 			vec[++i]=vec[j];
+// 		}
+// 	}
+// 	return i+1;
+// }
+// int main(){
+
+// }
+
 #include<iostream>
 #include<vector>
 using namespace std;
 
-int removeDuplicated(vector<int> &vec){
+int findFirstMissing(vector<int> &vec){
 	int i=0;
-	for(int j=1;j<vec.size();j++){
-		if(vec[i]!=vec[j]){
-			vec[++i]=vec[j];
+	while(i<vec.size()){
+		if(vec[i]>0&&vec[i]<vec.size()&&vec[vec[i]-1]!=vec[i]&&vec[i]!=i+1){
+			swap(vec[i],vec[vec[i]-1]);
+
+		}else{
+			i++;
 		}
 	}
-	return i+1;
+	for(int i=0;i<vec.size();i++){
+		if(vec[i]!=i+1)
+			return i+1;
+	}
+	return vec.size()+1;
 }
+
+
+int findCapacity(vector<int>& vec){
+	int capacity = 0;
+	int minHeight = ~(1<<31);
+	for(int h : vec){
+		capacity = max(capacity,h - minHeight);
+		minHeight = min(minHeight,h);
+	}
+	return capacity;
+}
+
+
+
+
+
 int main(){
-	cout<<"hello";
+	vector<int> input;
+	input.push_back(1);
+	input.push_back(2);
+	input.push_back(3);
+	input.push_back(4);
+	input.push_back(5);
+	cout<<findFirstMissing(input);
 }
-
-
 
 
 
