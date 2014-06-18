@@ -137,23 +137,80 @@
 // 	// cout<<findFirstMissing(input);
 // }
 
-#include<iostream>
-#include<vector>
-#include<random>
+// #include<iostream>
+// #include<vector>
+// #include<random>
+// using namespace std;
+
+// void findSamples(vector<int>& vec, int k){
+// 	default_random_engine gen;
+// 	for(int i=0;i<k;i++){
+// 		uniform_int_distribution<int> dist(i,vec.size()-1);
+// 		swap(vec[i],vec[dist(gen)]);
+// 	}
+// 	vec.resize(k);
+// }
+
+// int main(){
+	
+// }
+
+#include <iostream>
+#include <random>
+#include <vector>
+#include <iterator>
 using namespace std;
 
-void findSamples(vector<int>& vec, int k){
-	default_random_engine gen;
-	for(int i=0;i<k;i++){
-		uniform_int_distribution<int> dist(i,vec.size()-1);
-		swap(vec[i],vec[dist(gen)]);
-	}
-	vec.resize(k);
+double nonuniform(vector<double>& T, vector<double>& P){
+	default_random_engine gen((random_device())());
+	uniform_real_distribution<double> dist(0.0,1.0);
+	vector<double> array;
+	array.push_back(0);
+	partial_sum(P.begin(),P.end(),back_inserter(array));
+	auto iter = upper_bound(array.begin(),array.end(),dist(gen));
+	return T[(distance(array.begin(),iter)-1)];
+}
+int main(){
+	vector<double> input;
+	input.push_back(1);
+	input.push_back(2);
+	input.push_back(3);
+	input.push_back(4);
+	vector<double> pro;
+	pro.push_back(0.1);
+	pro.push_back(0.3);
+	pro.push_back(0.4);
+	pro.push_back(0.2);
+	cout<<nonuniform(input,pro);
 }
 
-int main(){
-	
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
