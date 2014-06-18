@@ -68,37 +68,60 @@
 
 // }
 
+// #include<iostream>
+// #include<vector>
+// using namespace std;
+
+// int findFirstMissing(vector<int> &vec){
+// 	int i=0;
+// 	while(i<vec.size()){
+// 		if(vec[i]>0&&vec[i]<vec.size()&&vec[vec[i]-1]!=vec[i]&&vec[i]!=i+1){
+// 			swap(vec[i],vec[vec[i]-1]);
+
+// 		}else{
+// 			i++;
+// 		}
+// 	}
+// 	for(int i=0;i<vec.size();i++){
+// 		if(vec[i]!=i+1)
+// 			return i+1;
+// 	}
+// 	return vec.size()+1;
+// }
+
+
+// int findCapacity(vector<int>& vec){
+// 	int capacity = 0;
+// 	int minHeight = ~(1<<31);
+// 	for(int h : vec){
+// 		capacity = max(capacity,h - minHeight);
+// 		minHeight = min(minHeight,h);
+// 	}
+// 	return capacity;
+// }
+
 #include<iostream>
 #include<vector>
 using namespace std;
 
-int findFirstMissing(vector<int> &vec){
-	int i=0;
-	while(i<vec.size()){
-		if(vec[i]>0&&vec[i]<vec.size()&&vec[vec[i]-1]!=vec[i]&&vec[i]!=i+1){
-			swap(vec[i],vec[vec[i]-1]);
-
-		}else{
-			i++;
-		}
+void nextPermu(vector<int>& vec){
+	int k=vec.size()-2;
+	while(k>=0&&vec[k]>=vec[k+1])
+		k--;
+	if(k==-1)
+		return;
+	int l;
+	for(int i=k+1;i<vec.size();i++){
+		if(vec[i]>vec[k])
+			l=i;
+		else
+			break;
 	}
-	for(int i=0;i<vec.size();i++){
-		if(vec[i]!=i+1)
-			return i+1;
-	}
-	return vec.size()+1;
+	swap(vec[k],vec[l]);
+	reverse(vec.begin()+k+1,vec.end());
 }
 
 
-int findCapacity(vector<int>& vec){
-	int capacity = 0;
-	int minHeight = ~(1<<31);
-	for(int h : vec){
-		capacity = max(capacity,h - minHeight);
-		minHeight = min(minHeight,h);
-	}
-	return capacity;
-}
 
 
 
@@ -111,7 +134,7 @@ int main(){
 	input.push_back(3);
 	input.push_back(4);
 	input.push_back(5);
-	cout<<findFirstMissing(input);
+	// cout<<findFirstMissing(input);
 }
 
 
