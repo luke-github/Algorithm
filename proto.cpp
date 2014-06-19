@@ -2,29 +2,46 @@
 #include <vector>
 using namespace std;
 
-vector<vector<int> > generate_pascal_triangle(int n){
-	if(n<=0){
-		return {};
+int stringToInt(string x){
+	if(x=="-"){
+		throw invalid_argument("illegal input");
 	}
-	vector<vector<int> > result;
-	result.push_back(vector<int>{1});
-	for(int i=1;i<n;i++){
-		vector<int> current_row;
-		current_row.push_back(1);
-		for(int j=1;j<i;j++){
-			current_row.push_back(result.back()[j-1]+result.back()[j]);
+	bool is_negative = x[0]=='-';
+	int result=0;
+	for(int i=is_negative;i<x.size();i++){
+		if(isdigit(x[i])){
+			result=result*10+x[i]-'0';
+		}else{
+			throw invalid_argument("illegal input");
 		}
-		current_row.push_back(1);
-		result.push_back(current_row);
 	}
+	if(is_negative)
+		result=-result;
 	return result;
 }
-int main(){
-	vector<vector<int> > pascal = generate_pascal_triangle(20);
-	for(vector<int> vec : pascal){
-		for(int m: vec){
-			cout<<m<<" ";
-		}
-		cout<<endl;
+
+string inToString(int x){
+	bool is_negative=false;
+	if(x<0){
+		x=-x;
+		is_negative=true;
 	}
+	string result;
+	while(x){
+		result.push_back('0'+x%10);
+		x/=10;
+	}
+	if(result.empty()){
+		return "0";
+	}
+	if(is_negative)
+		result.push_back('-');
+	reverse(result.begin(),result.end());
+	return result;
+}
+
+int main(){
+	int inputint=-123;
+	string inputstr="-1a23";
+	cout<<inToString(inputint)<<" "<<stringToInt(inputstr)<<endl;
 }
