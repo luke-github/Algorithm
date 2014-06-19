@@ -1,23 +1,18 @@
 #include <iostream>
 using namespace std;
 
-bool Parlindorm(string s){
-	int l=0;
-	int r=s.size()-1;
-	while(l<r){
-		while(!isalnum(s[l])&&l<r)
-			l++;
-		while(!isalnum(s[r])&&l<r)
-			r--;
-		if(tolower(s[l])!=tolower(s[r]))
-			return false;
-		l++;
-		r--;
+void reverse_words(string & str){
+	reverse(str.begin(),str.end());
+	int start=0;
+	int end;
+	while((end=str.find(" ",start))!=string::npos){
+		reverse(str.begin()+start,str.begin()+end);
+		start=end+1;
 	}
-	return true;
-
+	reverse(str.begin()+start,str.end());
 }
-
 int main(){
-	cout<<Parlindorm("121");
+	string input="123 234 345";
+	reverse_words(input);
+	cout<<input;
 }
