@@ -1,99 +1,32 @@
 #include <iostream>
 #include <vector>
-#include <deque>
+#include <cmath>
 using namespace std;
 
+void printAlgorithm(vector<vector<int> >&vec, int offset);
 
-bool checkValid(vector<vector<int> >&sudo, int start_row, int end_row, int start_col, int end_col, int num);
-bool checkSudo(vector<vector<int> >& sudo){
-	for(int i=0;i<9;i++){
-		if(checkValid(sudo,i,i+1,0,9,9)){
-			return false;
-		}
-		if(checkValid(sudo,0,9,i,i+1,9)){
-			return false;
-		}
-	}
-	for(int i=0;i<3;i++){
-		for(int j=0;i<3;j++){
-			if(checkValid(sudo,3*i,3*(i+1),3*j,3*(j+1),3))
-				return false;
-		}
-	}
-	return true;
 
+void printSpiral(vector<vector<int> >&vec){
+	for(int offset=0;offset<ceil(0.5*vec.size());offset++){
+		printAlgorithm(vec,offset);
+	}
 }
 
-bool checkValid(vector<vector<int> >&sudo, int start_row, int end_row, int start_col, int end_col, int num){
-	deque<bool> checker(num+1,false);
-	for(int i=start_row;i<end_row;i++){
-		for(int j=start_col;j<end_col;j++){
-			if(sudo[i][j]!=0 && checker[sudo[i][j]]){
-				return true;
-			}
-			checker[sudo[i][j]]=true;
-		}
+void printAlgorithm(vector<vector<int> >&vec, int offset){
+	if(((offset*2)+1)==vec.size()){
+		cout<<vec[offset][offset];
+	}else{
+		for(int i=offset;i<vec.size()-offset-1;i++)
+			cout<<vec[offset][i];
+		for(int i=offset;i<vec.size()-offset-1;i++)
+			cout<<vec[i][vec.size()-offset-1];
+		for(int i=vec.size()-offset-1;i>offset;i--)
+			cout<<vec[vec.size()-offset-1][i];
+		for(int i=vec.size()-offset-1;i>offset;i--)
+			cout<<vec[offset][i];
 	}
-	return false;
 }
 
 int main(){
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
