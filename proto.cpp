@@ -1,32 +1,30 @@
 #include <iostream>
 #include <vector>
-#include <cmath>
 using namespace std;
 
-void printAlgorithm(vector<vector<int> >&vec, int offset);
-
-
-void printSpiral(vector<vector<int> >&vec){
-	for(int offset=0;offset<ceil(0.5*vec.size());offset++){
-		printAlgorithm(vec,offset);
+vector<vector<int> > generate_pascal_triangle(int n){
+	if(n<=0){
+		return {};
 	}
-}
-
-void printAlgorithm(vector<vector<int> >&vec, int offset){
-	if(((offset*2)+1)==vec.size()){
-		cout<<vec[offset][offset];
-	}else{
-		for(int i=offset;i<vec.size()-offset-1;i++)
-			cout<<vec[offset][i];
-		for(int i=offset;i<vec.size()-offset-1;i++)
-			cout<<vec[i][vec.size()-offset-1];
-		for(int i=vec.size()-offset-1;i>offset;i--)
-			cout<<vec[vec.size()-offset-1][i];
-		for(int i=vec.size()-offset-1;i>offset;i--)
-			cout<<vec[offset][i];
+	vector<vector<int> > result;
+	result.push_back(vector<int>{1});
+	for(int i=1;i<n;i++){
+		vector<int> current_row;
+		current_row.push_back(1);
+		for(int j=1;j<i;j++){
+			current_row.push_back(result.back()[j-1]+result.back()[j]);
+		}
+		current_row.push_back(1);
+		result.push_back(current_row);
 	}
+	return result;
 }
-
 int main(){
-
+	vector<vector<int> > pascal = generate_pascal_triangle(20);
+	for(vector<int> vec : pascal){
+		for(int m: vec){
+			cout<<m<<" ";
+		}
+		cout<<endl;
+	}
 }
