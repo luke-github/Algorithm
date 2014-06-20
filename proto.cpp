@@ -1,18 +1,27 @@
 #include <iostream>
+#include <array>
 using namespace std;
 
-void reverse_words(string & str){
-	reverse(str.begin(),str.end());
-	int start=0;
-	int end;
-	while((end=str.find(" ",start))!=string::npos){
-		reverse(str.begin()+start,str.begin()+end);
-		start=end+1;
-	}
-	reverse(str.begin()+start,str.end());
+array<string,10> M={"0","1","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"};
+void phone_num_parser_handler(string &num,int index,string &ans);
+void phone_num_parser(string& num){
+	string ans(num.size(),0);
+	phone_num_parser_handler(num,0,ans);
 }
+
+void phone_num_parser_handler(string &num,int index,string &ans){
+	if(index==num.size()){
+		cout<<ans<<":";
+	}else{
+		for(char c : M[num[index]-'0']){
+			ans[index]=c;
+			phone_num_parser_handler(num,index+1,ans);
+		}
+	}
+}
+
 int main(){
-	string input="123 234 345";
-	reverse_words(input);
-	cout<<input;
+	string input="234";
+	phone_num_parser(input);
+
 }
