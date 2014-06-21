@@ -1,38 +1,66 @@
 #include <iostream>
-#include <sstream>
+#include <vector>
 using namespace std;
 
-string decode(const string& s){
-	int count=0;
+string trans_dec_bin(int num){
 	string result;
+	while(num){
+		result.push_back((num&1)+'0');
+		num>>=1;
+	}
+	reverse(result.begin(),result.end());
+	return result;
+}
+
+int trans_bin_dec(const string& s){
+	int result=0;
 	for(char c : s){
-		if(isdigit(c)){
-			count=count*10+c-'0';
-		}else{
-			result.append(count,c);
-			count=0;
-		}
+		result = (result<<1)+c-'0';
 	}
 	return result;
 }
 
-string encode(const string& s){
-	int count=1;
-	stringstream result;
-	for(int i=1;i<s.size();i++){
-		if(s[i]==s[i-1]){
-			count++;
-		}else{
-			result<<count<<s[i-1];
-			count=1;
-		}
+string encode(vector<int>& vec){
+	string result;
+	for(int x : vec){
+		string binary = trans_dec_bin(x);
+		binary.insert(0,binary.size()-1,'0');
+		result += binary;
 	}
-	result<<count<<s.back();
-	return result.str();
+	return result;
+}
+
+vector<int> decode(const string& s){
+	vector<int> result;
+	int index=0;
+	int zero_index=0;
+	while(index<s.size()){
+		while(zero_index<s.size()&&s[zero_index]=='0')
+			zero_index++;
+		int len=zero_index - index +1;
+		result.push_back(trans_bin_dec(s.substr(zero_index,len)));
+		zero_index+=len;
+		index=zero_index;
+	}
+	return result;
 }
 
 int main(){
-	string input = "aaabbbbbcc";
-	cout<<encode(input)<<endl;
-	cout<<decode(encode(input));
+	vector<int> input = {1,2,3,4,5};
+	string res = encode(input);
+	cout<<res<<endl;
+	vector<int> output = decode(res);
+	for(int x : output)
+		cout<<x<<":";
 }
+
+
+
+
+
+
+
+
+
+
+
