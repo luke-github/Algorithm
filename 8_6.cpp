@@ -8,7 +8,7 @@ struct ListNode{
 	T data;
 	shared_ptr<ListNode<T>> next;
 };
-int len_list(shared_ptr<ListNode<int>>& l);
+int len_list(shared_ptr<ListNode<int>> l);
 void next_k(shared_ptr<ListNode<int>>* ptr, int k);
 shared_ptr<ListNode<int>> find_coverage(shared_ptr<ListNode<int>>& L, shared_ptr<ListNode<int>>& R){
 	int lenL=len_list(L);
@@ -22,8 +22,9 @@ shared_ptr<ListNode<int>> find_coverage(shared_ptr<ListNode<int>>& L, shared_ptr
 
 }
 
-int len_list(shared_ptr<ListNode<int>>& l){
+int len_list(shared_ptr<ListNode<int>> l){
 	int counter=0;
+
 	while(l){
 		counter++;
 		l=l->next;
@@ -49,8 +50,8 @@ int main(){
 	L1->next=L2;
 	L2->next=L3;
 	L3->next=L4;
-	// L4->next=nullptr;
+	L4->next=nullptr;
 	L5->next=L3;
 	shared_ptr<ListNode<int>> result = find_coverage(L1,L5);
-	// cout<<result->data;
+	cout<<result->data;
 }

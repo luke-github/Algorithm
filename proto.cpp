@@ -8,49 +8,36 @@ struct ListNode{
 	shared_ptr<ListNode<T>> next;
 };
 
-shared_ptr<ListNode<int>> reverse_list(shared_ptr<ListNode<int>>& L){
-	shared_ptr<ListNode<int>> cur=L, pre=nullptr;
-	while(cur){
-		shared_ptr<ListNode<int>> temp = cur->next;
-		cur->next = pre;
-		pre = cur;
-		cur = temp;
-	}
-	return pre;
-}
+ int len_list(shared_ptr<ListNode<int>> l);
+ void advance_n_steps(shared_ptr<ListNode<int>>& ptr,int n);
 
-shared_ptr<ListNode<int>> reverse_k(shared_ptr<ListNode<int>>& L, int k){
-	shared_ptr<ListNode<int>> before_pre=nullptr,before_post=nullptr,pre=L,post=L;
-	bool first_time =  true;
-	while(pre){
-		int i=k;
-		while(i){
-			i--;
-			before_post=post;
-			post=post->next;
-			if(!post)
-				break;
-		}
-		if(i){
-			return L;
-		}
-		before_post->next = nullptr;
-		reverse_list(pre);
-		if(before_pre){
-			before_pre->next=before_post;
-		}
-		if(first_time){
-			L=before_post;
-			first_time=false;
-		}
-		before_pre = pre;
-		pre->next = post;
-		pre = post;
-		before_post = nullptr;
+
+shared_ptr<ListNode<int>> find_coverage(shared_ptr<ListNode<int>>& L, shared_ptr<ListNode<int>>& R){
+	int lenl=len_list(L);
+	int lenr=len_list(R);
+	advance_n_steps(lenl>lenr?L:R,abs(lenl - lenr));
+	while(L&&R&&L!=R){
+		L=L->next;
+		R=R->next;
 	}
 	return L;
 }
 
+int len_list(shared_ptr<ListNode<int>> l){
+	int counter=0;
+	while(l){
+		counter++;
+		l=l->next;
+	}
+	return counter;
+}
+
+void advance_n_steps(shared_ptr<ListNode<int>>& ptr,int n){
+	while(n){
+		ptr=ptr->next;
+		n--;
+	}
+}
 
 int main(){
 	shared_ptr<ListNode<int>> L1 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
@@ -61,10 +48,8 @@ int main(){
 	L1->next=L2;
 	L2->next=L3;
 	L3->next=L4;
-	L4->next=L5;
-	shared_ptr<ListNode<int>> result = reverse_k(L1,2);
-	while(result){
-		cout<<result->data<<" ";
-		result=result->next;
-	}
+	L4->next=nullptr;
+	L5->next=L2;
+	shared_ptr<ListNode<int>> result = find_coverage(L1,L5);
+	cout<<result->data;
 }
