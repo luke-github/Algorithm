@@ -20,22 +20,18 @@ shared_ptr<ListNode<int>> reverse_link_list(shared_ptr<ListNode<int>>& head){
 }
 
 int main(){
-	
+	shared_ptr<ListNode<int>> L1 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
+	shared_ptr<ListNode<int>> L2 = make_shared<ListNode<int>>(ListNode<int>{2,nullptr});
+	shared_ptr<ListNode<int>> L3 = make_shared<ListNode<int>>(ListNode<int>{3,nullptr});
+	shared_ptr<ListNode<int>> L4 = make_shared<ListNode<int>>(ListNode<int>{4,nullptr});
+	L1->next = L2;
+	L2->next = L3;
+	L3->next = L4;
+	shared_ptr<ListNode<int>> result = reverse_link_list(L1);
+	while(result){
+		cout<<result->data<<":";
+		result=result->next;
+	}
 }
 
 
-// void test_func(ListNode<int> m){
-// 	cout<<m.data;
-// }
-
-// int main(){
-// 	shared_ptr<ListNode<int>> L1 =
-//     make_shared<ListNode<int>>(ListNode<int>{1, nullptr});
-//     shared_ptr<ListNode<int>> L2 =
-//     make_shared<ListNode<int>>(ListNode<int>{2, nullptr});
-//     L1->next=L2;
-//     // test_func(L1);
-//     ListNode<int> node1;
-//     node1.data=10;
-//     test_func(node1);
-// }
