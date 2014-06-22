@@ -62,7 +62,7 @@ int main(){
 	L2->next=L3;
 	L3->next=L4;
 	L4->next=L5;
-	shared_ptr<ListNode<int>> result = reverse_k(L1,3);
+	shared_ptr<ListNode<int>> result = reverse_k(L1,2);
 	while(result){
 		cout<<result->data<<" ";
 		result=result->next;
