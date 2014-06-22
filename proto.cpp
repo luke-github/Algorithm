@@ -8,18 +8,23 @@ struct ListNode{
 	shared_ptr<ListNode<T>> next;
 };
 
-shared_ptr<ListNode<int>> find_coverage(shared_ptr<ListNode<int>>& L, shared_ptr<ListNode<int>>& R){
-	shared_ptr<ListNode<int>> loop1 = find_cycle(L);
-	shared_ptr<ListNode<int>> loop2 = find_cycle(R);
-	if(!loop1&&!loop2){
-		return find_noncycle_coverage(L,R);
+void delete_the_kth_node(shared_ptr<ListNode<int>>& head, int k){
+	shared_ptr<ListNode<int>> itor = head;
+	while(itor&&k--){
+		itor=itor->next;
 	}
-	else if(loop1&&loop2){
-		shared_ptr<ListNode<int>> temp = loop1->next;
-		while(temp!=loop1 && temp!=loop2){
-			temp=temp->next;
-		}
-		return temp==loop2?temp:nullptr;
+	if(k){
+		throw length_error("error");
 	}
-	return nullptr;
+	shared_ptr<ListNode<int>> cur = head, pre=nullptr;
+	while(itor){
+		pre=cur;
+		cur=cur->next;
+		itor=itor->next;
+	}
+	pre->next=cur->next;
+}
+
+int main(){
+	
 }
