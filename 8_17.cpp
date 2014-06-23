@@ -31,7 +31,7 @@ shared_ptr<ListNode<int>> pivot_list(shared_ptr<ListNode<int>>& head,int x){
 		else
 			add_node(now,larger_head,larger_tail);
 		now=now->next;
-	}
+	} 
 	if(less_tail){
 		less_tail->next=nullptr;
 	}
