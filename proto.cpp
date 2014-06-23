@@ -8,42 +8,46 @@ struct ListNode{
 	shared_ptr<ListNode<int>> next;
 };
 
-shared_ptr<ListNode<int>> sort_list(const shared_ptr<ListNode<int>>& L){
-	shared_ptr<ListNode<int>> head = nullptr, now = L, next = nullptr;
-	while(now){
-		next = now->next;
-		now->next = nullptr;
-		if(head){
-			shared_ptr<ListNode<int>> head_ptr=head, pre_head_ptr=nullptr;
-			while(head_ptr&&now->data>=head_ptr->data){
-				pre_head_ptr=head_ptr;
-				head_ptr=head_ptr->next;
-			}
-			now->next=head_ptr;
-			if(pre_head_ptr){
-				pre_head_ptr->next=now;
-			}else{
-				head = now;
-			}
-		}else{
-			head=now;
-		}
-		now = next;
+bool handle_carry(shared_ptr<ListNode<int>>& head){
+	if(head->data<10)
+		return false;
+	head->data %= 10;
+	if(!head->next){
+		head->next = make_shared<ListNode<int>>(ListNode<int>{0,nullptr});
 	}
-	return head;
+	head->next->data++;
+	return true;
+}
+
+shared_ptr<ListNode<int>> add_two_list(shared_ptr<ListNode<int>>& l1,shared_ptr<ListNode<int>>& l2){
+	shared_ptr<ListNode<int>> result = l1;
+	while(l2){
+		l1->data+=l2->data;
+		handle_carry(l1);
+		if(!l1->next){
+			l1->next=l2->next;
+			return result;
+		}
+		l1=l1->next;
+		l2=l2->next;
+	}
+	while(l1&&handle_carry(l1)){
+		l1=l1->next;
+	}
+	return result;
 }
 
 int main(){
-	shared_ptr<ListNode<int>> L1 = make_shared<ListNode<int>>(ListNode<int>{5,nullptr});
-	shared_ptr<ListNode<int>> L2 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
-	shared_ptr<ListNode<int>> L3 = make_shared<ListNode<int>>(ListNode<int>{3,nullptr});
-	shared_ptr<ListNode<int>> L4 = make_shared<ListNode<int>>(ListNode<int>{2,nullptr});
-	shared_ptr<ListNode<int>> L5 = make_shared<ListNode<int>>(ListNode<int>{4,nullptr});
+	shared_ptr<ListNode<int>> L1 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
+	shared_ptr<ListNode<int>> L2 = make_shared<ListNode<int>>(ListNode<int>{0,nullptr});
+	shared_ptr<ListNode<int>> L3 = make_shared<ListNode<int>>(ListNode<int>{9,nullptr});
+	shared_ptr<ListNode<int>> L4 = make_shared<ListNode<int>>(ListNode<int>{9,nullptr});
+	shared_ptr<ListNode<int>> L5 = make_shared<ListNode<int>>(ListNode<int>{9,nullptr});
 	L1->next=L2;
-	L2->next=L3;
+	// L2->next=L3;
 	L3->next=L4;
 	L4->next=L5;
-	shared_ptr<ListNode<int>> result = sort_list(L1);
+	shared_ptr<ListNode<int>> result = add_two_list(L1,L3);
 	while(result){
 		cout<<result->data<<" ";
 		result=result->next;
