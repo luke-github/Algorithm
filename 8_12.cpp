@@ -43,6 +43,6 @@ int main(){
 	shared_ptr<ListNode<int>> result = even_odd_order(L1);
 	while(result){
 		cout<<result->data;
-		result=result->next;
+		result=result->next; 
 	}
 }
