@@ -45,4 +45,5 @@ int main(){
 		cout<<result->data;
 		result=result->next; 
 	}
+	
 }
