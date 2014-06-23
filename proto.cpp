@@ -8,33 +8,20 @@ struct ListNode{
 	shared_ptr<ListNode<int>> next;
 };
 
-shared_ptr<ListNode<int>> reverse_list(shared_ptr<ListNode<int>>& head){
-	shared_ptr<ListNode<int>> cur=head, pre=nullptr;
-	while(cur){
-		shared_ptr<ListNode<int>> temp = cur->next;
-		cur->next=pre;
-		pre=cur;
-		cur=temp;
+double find_median(shared_ptr<ListNode<int>>& ptr){
+	shared_ptr<ListNode<int>> cur=ptr, start=ptr;
+	int count=0;
+	do{
+		count++;
+		cur=cur->next;
+		if(start->data>cur->data)
+			start=cur;
+	}while(cur!=ptr);
+	for(int i=0;i<(count-1)/2;i++){
+		start=start->next;
 	}
-	return pre;
+	return count&1?start->data:0.5*(start->data+start->next->data);
 }
-
-bool check_list_parlindrome(shared_ptr<ListNode<int>>& head){
-	shared_ptr<ListNode<int>> slow = head, fast = head;
-	while(fast){
-		fast=fast->next;
-		if(fast){
-			fast=fast->next;
-			slow=slow->next;
-		}
-	}
-	shared_ptr<ListNode<int>> result = reverse_list(slow);
-	while(result && result){
-		if(result->data!=head->data){
-			return false;
-		}
-		result=result->next;
-		head=head->next;
-	}
-	return true;
+int main(){
+	
 }
