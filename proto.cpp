@@ -29,5 +29,12 @@ bool check_list_parlindrome(shared_ptr<ListNode<int>>& head){
 		}
 	}
 	shared_ptr<ListNode<int>> result = reverse_list(slow);
-	while(result && )
+	while(result && result){
+		if(result->data!=head->data){
+			return false;
+		}
+		result=result->next;
+		head=head->next;
+	}
+	return true;
 }
