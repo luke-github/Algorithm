@@ -5,31 +5,29 @@ using namespace std;
 template<class T>
 struct ListNode{
 	T data;
-	shared_ptr<ListNode<T>> next;
+	shared_ptr<ListNode<int>> next;
 };
 
-shared_ptr<ListNode<int>> even_odd_order(shared_ptr<ListNode<int>>& head){
-	if(!head->next){
-		return nullptr;
+shared_ptr<ListNode<int>> reverse_list(shared_ptr<ListNode<int>>& head){
+	shared_ptr<ListNode<int>> cur=head, pre=nullptr;
+	while(cur){
+		shared_ptr<ListNode<int>> temp = cur->next;
+		cur->next=pre;
+		pre=cur;
+		cur=temp;
 	}
-	shared_ptr<ListNode<int>> even_cur=head, pre_even_cur=nullptr, odd_cur=head->next,odd_first=head;
-	while(even_cur&&odd_cur){
-		even_cur->next=odd_cur->next;
-		pre_even_cur=even_cur;
-		even_cur=even_cur->next;
-		if(even_cur){
-			odd_cur->next=even_cur->next;
-			odd_cur=odd_cur->next;
-		}
-	}
-	if(even_cur){
-		pre_even_cur=even_cur;
-	}
-	if(pre_even_cur)
-		pre_even_cur->next=odd_first;
-	return head;
+	return pre;
 }
 
-int main(){
-
+bool check_list_parlindrome(shared_ptr<ListNode<int>>& head){
+	shared_ptr<ListNode<int>> slow = head, fast = head;
+	while(fast){
+		fast=fast->next;
+		if(fast){
+			fast=fast->next;
+			slow=slow->next;
+		}
+	}
+	shared_ptr<ListNode<int>> result = reverse_list(slow);
+	while(result && )
 }

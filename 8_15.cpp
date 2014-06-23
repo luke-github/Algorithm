@@ -29,12 +29,12 @@ bool check_parlidrome(shared_ptr<ListNode<int>> head){
 		}
 	}
 	shared_ptr<ListNode<int>> res = reverse_list(slow);
-	while(head && slow){
-		if(slow->data != head->data){
+	while(head && res){
+		if(res->data != head->data){
 			return false;
 		}
 		head=head->next;
-		slow=slow->next;
+		res=res->next;
 	}
 	return true;
 }
@@ -42,13 +42,13 @@ bool check_parlidrome(shared_ptr<ListNode<int>> head){
 int main(){
 	shared_ptr<ListNode<int>> L1 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
 	shared_ptr<ListNode<int>> L2 = make_shared<ListNode<int>>(ListNode<int>{2,nullptr});
-	shared_ptr<ListNode<int>> L3 = make_shared<ListNode<int>>(ListNode<int>{2,nullptr});
-	shared_ptr<ListNode<int>> L4 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
+	shared_ptr<ListNode<int>> L3 = make_shared<ListNode<int>>(ListNode<int>{3,nullptr});
+	shared_ptr<ListNode<int>> L4 = make_shared<ListNode<int>>(ListNode<int>{2,nullptr});
 	shared_ptr<ListNode<int>> L5 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
 	L1->next=L2;
 	L2->next=L3;
 	L3->next=L4;
-	// L4->next=L5;
+	L4->next=L5;
 	L5->next=nullptr;
 	
 	cout<<check_parlidrome(L1);
