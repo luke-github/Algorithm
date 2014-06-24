@@ -1,39 +1,27 @@
 #include <iostream>
 #include <stack>
-#include <sstream>
 using namespace std;
 
-int RPN_solution(const string& s){
-	stringstream ss(s);
-	string symbol;
-	stack<int> result_stack;
-	while(getline(ss,symbol,',')){
-		if(symbol=="+" || symbol=="-" ||symbol=="*" ||symbol=="/"){
-			int second = result_stack.top();
-			result_stack.pop();
-			int first =  result_stack.top();
-			result_stack.pop();
-			switch(symbol.front()){
-				case '+':
-					result_stack.emplace(first+second);
-					break;
-				case '-':
-					result_stack.emplace(first-second);
-					break;				
-				case '*':
-					result_stack.emplace(first*second);
-					break;
-				case '/':
-					result_stack.emplace(first/second);
-					break;
-			}				
+
+bool check_parenthese(const string& s){
+	stack<char> stk;
+	for(int i=0;i<s.size();i++){
+		if(s[i]=='('||s[i]=='['||s[i]=='{'){
+			stk.emplace(s[i]);
 		}else{
-			result_stack.emplace(stoi(symbol));
+			if(stk.empty())
+				return false;
+			if((s[i]==')'&&stk.top()!='(') || 
+				(s[i]==']'&&stk.top()!='[') || 
+			(s[i]=='}'&&stk.top()!='{'))
+				return false;
+			stk.pop();
 		}
 	}
-	return result_stack.top();
+	return stk.empty();
 }
 
 int main(){
-	
+	string input = "()[]{}{[()()]}";
+	cout<<check_parenthese(input);
 }
