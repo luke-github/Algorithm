@@ -35,6 +35,6 @@ double RPN_solution(const string& s){
 }
 
 int main(){
-	string input = "3,4,+,5,3,-,*";
+		string input = "3,4,+,5,3,-,*";
 	cout<<RPN_solution(input);
 }

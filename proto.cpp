@@ -1,37 +1,39 @@
 #include <iostream>
 #include <stack>
+#include <sstream>
 using namespace std;
 
-class My_Stack{
-public:
-	void push(int x){
-		s_.emplace(x,s_.empty()? x : max(x,s_.top().second));
-	}
-	int pop(){
-		if(s_.empty()){
-			throw length_error("the stack is empty");
+int RPN_solution(const string& s){
+	stringstream ss(s);
+	string symbol;
+	stack<int> result_stack;
+	while(getline(ss,symbol,',')){
+		if(symbol=="+" || symbol=="-" ||symbol=="*" ||symbol=="/"){
+			int second = result_stack.top();
+			result_stack.pop();
+			int first =  result_stack.top();
+			result_stack.pop();
+			switch(symbol.front()){
+				case '+':
+					result_stack.emplace(first+second);
+					break;
+				case '-':
+					result_stack.emplace(first-second);
+					break;				
+				case '*':
+					result_stack.emplace(first*second);
+					break;
+				case '/':
+					result_stack.emplace(first/second);
+					break;
+			}				
+		}else{
+			result_stack.emplace(stoi(symbol));
 		}
-		int result = s_.top().first;
-		s_.pop();
-		return result;
 	}
-	int max_num(){
-		if(s_.empty()){
-			throw length_error("the stack is empty");
-		}
-		return s_.top().second;
-	}
-private:
-	stack<pair<int,int>> s_;
-};
+	return result_stack.top();
+}
 
 int main(){
-	My_Stack st;
-	st.push(1);
-	st.push(2);
-	st.push(3);
-	st.push(4);
-	cout<<st.max_num()<<endl;
-	st.pop();
-	cout<<st.max_num()<<endl;
+	
 }
