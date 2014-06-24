@@ -4,36 +4,56 @@
 using namespace std;
 
 template<class T>
-struct BST_Node{
+struct ListNode{
 	T data;
-	shared_ptr<BST_Node<int>> left;
-	shared_ptr<BST_Node<int>> right;
+	T order;
+	shared_ptr<ListNode<int>> jump;
+	shared_ptr<ListNode<int>> next;
 };
 
-void print_BST_nodes(shared_ptr<BST_Node<int>>& node){
-	stack<shared_ptr<BST_Node<int>>> stk;
-	while(!stk.empty()||node){
-		if(node){
-			stk.push(node);
-			node=node->left;
-		}else{
-			node=stk.top();
-			stk.pop();
-			cout<<node->data;
-			node=node->right;
+void posting_list_order_recursion(shared_ptr<ListNode<int>>& node, int& counter){
+	if(node&&node->order==-1){
+		node->order=counter++;
+		posting_list_order_recursion(node->jump,counter);
+		posting_list_order_recursion(node->next,counter);
+	}
+}
+
+void posting_list_order_iteration(shared_ptr<ListNode<int>>& node){
+	int counter=0;
+	stack<shared_ptr<ListNode<int>>> stk;
+	stk.emplace(node);
+	while(!stk.empty()){
+		shared_ptr<ListNode<int>> cur = stk.top();
+		stk.pop();
+		if(cur&&cur->order==-1){
+			cur->order=counter++;
+			stk.emplace(cur->next);
+			stk.emplace(cur->jump);
 		}
 	}
 }
 
 int main(){
-	shared_ptr<BST_Node<int>> L1 = make_shared<BST_Node<int>>(BST_Node<int>{1,nullptr});
-	shared_ptr<BST_Node<int>> L2 = make_shared<BST_Node<int>>(BST_Node<int>{2,nullptr});
-	shared_ptr<BST_Node<int>> L3 = make_shared<BST_Node<int>>(BST_Node<int>{3,nullptr});
-	shared_ptr<BST_Node<int>> L4 = make_shared<BST_Node<int>>(BST_Node<int>{4,nullptr});
-	shared_ptr<BST_Node<int>> L5 = make_shared<BST_Node<int>>(BST_Node<int>{5,nullptr});
-	L1->left=L2;
-	L1->right=L3;
-	L2->left=L4;
-	L3->right=L5;
-	print_BST_nodes(L1);
+	shared_ptr<ListNode<int>> L1 = make_shared<ListNode<int>>(ListNode<int>{1,-1,nullptr,nullptr});
+	shared_ptr<ListNode<int>> L2 = make_shared<ListNode<int>>(ListNode<int>{2,-1,nullptr,nullptr});
+	shared_ptr<ListNode<int>> L3 = make_shared<ListNode<int>>(ListNode<int>{3,-1,nullptr,nullptr});
+	shared_ptr<ListNode<int>> L4 = make_shared<ListNode<int>>(ListNode<int>{4,-1,nullptr,nullptr});
+	shared_ptr<ListNode<int>> L5 = make_shared<ListNode<int>>(ListNode<int>{5,-1,nullptr,nullptr});
+	L1->next=L2;
+	L2->next=L3;
+	L3->next=L4;
+	L4->next=L5;
+	L1->jump=L3;
+	L3->jump=L5;
+	L2->jump=L4;
+	L4->jump=L5;
+	L5->jump=L1;
+	int x=0;
+	// posting_list_order_recursion(L1,x);
+	posting_list_order_iteration(L1);
+	while(L1){
+		cout<<L1->order<<" ";
+		L1=L1->next;
+	}
 }
