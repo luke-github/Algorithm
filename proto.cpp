@@ -1,25 +1,37 @@
 #include <iostream>
-#include <vector>
-#include <sstream>
+#include <stack>
 using namespace std;
-
-vector<pair<int,int>> sunset_solution(istringstream* sin){
-	vector<pair<int,int>> vec;
-	int height;
-	int index=0;
-	while(*sin>>height){
-		while(!vec.empty()&&height>=vec.back().second){
-			vec.pop_back();
-		}
-		vec.emplace_back(index++,height);
+void insert_node(int node,stack<int>* st);
+void sort_stack(stack<int>* st){
+	if(!st->empty()){
+		int temp = st->top();
+		st->pop();
+		sort_stack(st);
+		insert_node(temp,st);
 	}
-	return vec;
+}
+
+void insert_node(int node,stack<int>* st){
+	if(st->empty()||node>=st->top()){
+		st->push(node);
+	}else{
+		int temp = st->top();
+		st->pop();
+		insert_node(node,st);
+		st->push(temp);
+	}
 }
 
 int main(){
-	string input = " 1 2 3 4 5 6 5 4 3";
-	istringstream ss(input);
-	vector<pair<int,int>> result = sunset_solution(&ss);
-	for(int i=0;i<result.size();i++)
-		cout<<result[i].first<<" "<<result[i].second<<endl;
+	stack<int> my_stack;
+	my_stack.push(1);
+	my_stack.push(4);
+	my_stack.push(2);
+	my_stack.push(7);
+	my_stack.push(5);
+	sort_stack(&my_stack);
+	while(!my_stack.empty()){
+		cout<<my_stack.top()<<" ";
+		my_stack.pop();
+	}
 }
