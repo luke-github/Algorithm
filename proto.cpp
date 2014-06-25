@@ -9,17 +9,23 @@ struct BST{
 	shared_ptr<BST<T>> right;
 };
 
-int max_depth(shared_ptr<BST<int>>& head){
+pair<shared_ptr<BST<int>>,int> k_unbalanced_node(shared_ptr<BST<int>>& head, int k){
 	if(!head){
-		return 0;
+		return {nullptr,0};
 	}
-	return 1+max(max_depth(head->left),max_depth(head->right));
+	auto left_result = k_unbalanced_node(head->left,k);
+	if(left_result.first)
+		return left_result;
+	auto right_result = k_unbalanced_node(head->right,k);
+	if(right_result.first)
+		return right_result;
+	int num = left_result.second + right_result.second + 1;
+	if(abs(left_result.second - right_result.second)>k){
+		return {head,num};
+	}
+	return {nullptr,num};
 }
 
-int min_depth(shared_ptr<BST<int>>& head){
-	if(!head){
-		return 0;
-	}else{
-		return 1+min(min_depth(head->left),min_depth(head->right))
-	}
+int main(){
+	
 }
