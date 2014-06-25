@@ -8,20 +8,21 @@ struct BST{
 	shared_ptr<BST<T>> left;
 	shared_ptr<BST<T>> right;
 };
-bool check_symmetric_tree_handler(shared_ptr<BST<int>>& leftnode, shared_ptr<BST<int>>& rightnode);
-bool check_symmetric_tree(shared_ptr<BST<int>>& head){
-	return !head || check_symmetric_tree_handler(head->left,head->right);
-}
-bool check_symmetric_tree_handler(shared_ptr<BST<int>>& leftnode, shared_ptr<BST<int>>& rightnode){
-	if(!leftnode&&!rightnode)
-		return true;
-	else if(leftnode&&rightnode){
-		return leftnode->data==rightnode->data &&
-				check_symmetric_tree_handler(leftnode->left,rightnode->right) &&
-				check_symmetric_tree_handler(leftnode->right,rightnode->left);
+
+shared_ptr<BST<int>> LCA(shared_ptr<BST<int>>& root,shared_ptr<BST<int>>& A, shared_ptr<BST<int>>& B){
+	if(!root){
+		return nullptr;
 	}
-	else
-		return false;
+	else if(root==A||root==B){
+		return root;
+	}
+	 shared_ptr<BST<int>> left_result = LCA(root->left,A,B);
+	 shared_ptr<BST<int>> right_result = LCA(root->right,A,B);
+	if(left_result&&right_result){
+		return root;
+	}else{
+		return left_result? left_result : right_result;
+	}
 }
 int main(){
 	
