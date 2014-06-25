@@ -1,42 +1,25 @@
 #include <iostream>
-#include <stack>
+#include <memory>
 using namespace std;
 
-
-class My_Queue{
-public:
-	void enqueue(int x){
-		stack_a_.emplace(x);
-	}
-	int dequeue(){
-		if(stack_b_.empty()){
-			while(!stack_a_.empty()){
-				stack_b_.emplace(stack_a_.top());
-				stack_a_.pop();
-			}
-		}
-		if(!stack_b_.empty()){
-			int result = stack_b_.top();
-			stack_b_.pop();
-			return result;
-		}else{
-			throw invalid_argument("empty queue");
-		}
-	}
-private:
-	stack<int> stack_a_,stack_b_;
+template<class T>
+struct BST{
+	T data;
+	shared_ptr<BST<T>> left;
+	shared_ptr<BST<T>> right;
 };
-int main(){
-		My_Queue q;
-	q.enqueue(1);
-	q.enqueue(2);
-	q.enqueue(3);
-	q.enqueue(4);
-	q.enqueue(5);
-	cout<<q.dequeue();
-	cout<<q.dequeue();
-	cout<<q.dequeue();
-	cout<<q.dequeue();
-	cout<<q.dequeue();
-	// cout<<q.dequeue();
+
+int max_depth(shared_ptr<BST<int>>& head){
+	if(!head){
+		return 0;
+	}
+	return 1+max(max_depth(head->left),max_depth(head->right));
+}
+
+int min_depth(shared_ptr<BST<int>>& head){
+	if(!head){
+		return 0;
+	}else{
+		return 1+min(min_depth(head->left),min_depth(head->right))
+	}
 }
