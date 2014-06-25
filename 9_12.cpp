@@ -39,4 +39,5 @@ int main(){
 	cout<<q.dequeue();
 	cout<<q.dequeue();
 	cout<<q.dequeue();
+	cout<<q.dequeue();
 }

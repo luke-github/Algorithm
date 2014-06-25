@@ -1,56 +1,42 @@
 #include <iostream>
-#include <vector>
+#include <stack>
 using namespace std;
+
 
 class My_Queue{
 public:
-	My_Queue(int capacity) : data_(capacity) {}
-
-	int size(){
-		return count_;
-	}
-
 	void enqueue(int x){
-		if(count_==data_.size()){
-			rotate(data_.begin(),data_.begin()+head_,data_.end());
-			head_=0;
-			tail_=count_;
-			data_.resize(data_.size()<<1);
-		}
-		data_[tail_]=x;
-		tail_=(tail_+1)%data_.size();
-		count_++;
+		stack_a_.emplace(x);
 	}
-
 	int dequeue(){
-		if(!count_){
-			throw invalid_argument("the queue is empty");
+		if(stack_b_.empty()){
+			while(!stack_a_.empty()){
+				stack_b_.emplace(stack_a_.top());
+				stack_a_.pop();
+			}
 		}
-		int result = data_[head_];
-		count_--;
-		head_=(head_+1)%data_.size();
-		return result;
-
+		if(!stack_b_.empty()){
+			int result = stack_b_.top();
+			stack_b_.pop();
+			return result;
+		}else{
+			throw invalid_argument("empty queue");
+		}
 	}
 private:
-	int head_=0,tail_=0,count_=0;
-	vector<int> data_;
+	stack<int> stack_a_,stack_b_;
 };
-
 int main(){
-		My_Queue q(5);
+		My_Queue q;
 	q.enqueue(1);
 	q.enqueue(2);
 	q.enqueue(3);
 	q.enqueue(4);
 	q.enqueue(5);
-	q.enqueue(6);
-	cout<<q.dequeue()<<endl;
-	cout<<q.dequeue()<<endl;
-	cout<<q.dequeue()<<endl;	
-	cout<<q.dequeue()<<endl;
-	cout<<q.dequeue()<<endl;
-	cout<<q.dequeue()<<endl;
-	cout<<q.dequeue()<<endl;
-    cout<<q.size()<<endl;
+	cout<<q.dequeue();
+	cout<<q.dequeue();
+	cout<<q.dequeue();
+	cout<<q.dequeue();
+	cout<<q.dequeue();
+	// cout<<q.dequeue();
 }
