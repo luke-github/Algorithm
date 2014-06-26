@@ -20,11 +20,14 @@ shared_ptr<BST_Node<int>> reconstruct_inorder(vector<int>& pre, vector<int>& in)
 	return reconstruct_inorder_handler(pre,0,pre.size(),in,0,in.size(),in_entry_map);
 }
 
-shared_ptr<BST_Node<int>> reconstruct_inorder_handler(vector<int>& pre, int pre_s, int pre_e, vector<int>& in, int in_s, int in_e, unordered_map<int, size_t>& in_entry_map){
+shared_ptr<BST_Node<int>> reconstruct_inorder_handler(vector<int>& pre, int pre_s, int pre_e, 
+	vector<int>& in, int in_s, int in_e, unordered_map<int, size_t>& in_entry_map){
 	if(pre_e>pre_s&&in_e>in_s){
 		auto index = in_entry_map.at(pre[pre_s]);
 		auto left_tree = index - in_s;
-		return make_shared<BST_Node<int>>(BST_Node<int>{pre[pre_s],reconstruct_inorder_handler(pre,pre_s+1,pre_s+1+left_tree,in,in_s,index,in_entry_map),reconstruct_inorder_handler(pre,pre_s+1+left_tree,pre_e,in,index+1,in_e,in_entry_map)});
+		return make_shared<BST_Node<int>>(BST_Node<int>{pre[pre_s],
+			reconstruct_inorder_handler(pre,pre_s+1,pre_s+1+left_tree,in,in_s,index,in_entry_map),
+			reconstruct_inorder_handler(pre,pre_s+1+left_tree,pre_e,in,index+1,in_e,in_entry_map)});
 	}
 	return nullptr;
 }
