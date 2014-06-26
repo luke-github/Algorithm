@@ -7,15 +7,24 @@ struct BST_Node{
 	T data;
 	shared_ptr<BST_Node<T>> left;
 	shared_ptr<BST_Node<T>> right;
+	T size;
 };
 
-bool check_path_sum(shared_ptr<BST_Node<int>>& head, int num, int sum){
-	if(!head){
-		return false;
+shared_ptr<BST_Node<int>> find_node(shared_ptr<BST_Node<int>> head, int k){
+	while(head){
+		int left_size = head->left? head->left->size : 0;
+		if(left_size<k-1){
+			k-=(left_size+1);
+			head=head->right;
+		}
+		else if(left_size==k-1)
+			return head;
+		else{
+			head = head->left;
+		}
 	}
-	num = num + head->data;
-	if(!head->left&&!head->right){
-		return num==sum;
-	}
-	return check_path_sum(head->left,num,sum) || check_path_sum(head->right,num,sum);
+	throw invalid_argument("invalid node");
+}
+int main(){
+	
 }
