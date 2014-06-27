@@ -8,26 +8,24 @@ struct BSF_Node{
 	T data;
 	shared_ptr<BSF_Node<T>> left;
 	shared_ptr<BSF_Node<T>> right;
+	shared_ptr<BSF_Node<T>> next;
 };
-void generate_leave_node_list_handler(shared_ptr<BSF_Node<int>>& node, list<shared_ptr<BSF_Node<int>>>* result);
-list<shared_ptr<BSF_Node<int>>> generate_leave_node_list(shared_ptr<BSF_Node<int>>& head){
-	list<shared_ptr<BSF_Node<int>>> return_list;
-	generate_leave_node_list_handler(head,&return_list);
-	return return_list;
-}
 
-void generate_leave_node_list_handler(shared_ptr<BSF_Node<int>>& node, list<shared_ptr<BSF_Node<int>>>* result){
-	if(node){
-		if(!node->left&&!node->right){
-			result->emplace_back(node);
-		}else{
-			generate_leave_node_list_handler(node->left,result);
-			generate_leave_node_list_handler(node->right,result);
+void set_next_link(shared_ptr<BSF_Node<int>>& head){
+	shared_ptr<BSF_Node<int>> left_first=head;
+	shared_ptr<BSF_Node<int>> parent=nullptr;
+	while(left_first){
+		parent=left_first;
+		while(parent&&parent->left){
+			parent->left->next=parent->right;
+			if(parent->next){
+				parent->right->next=parent->next->left;
+			}
+			parent=parent->next;
 		}
+		left_first=left_first->left;
 	}
 }
-
 int main(){
 	
 }
-
