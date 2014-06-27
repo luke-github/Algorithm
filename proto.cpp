@@ -1,31 +1,45 @@
 #include <iostream>
 #include <memory>
-#include <list>
 using namespace std;
 
-template<class T>
-struct BSF_Node{
-	T data;
-	shared_ptr<BSF_Node<T>> left;
-	shared_ptr<BSF_Node<T>> right;
-	shared_ptr<BSF_Node<T>> next;
-};
-
-void set_next_link(shared_ptr<BSF_Node<int>>& head){
-	shared_ptr<BSF_Node<int>> left_first=head;
-	shared_ptr<BSF_Node<int>> parent=nullptr;
-	while(left_first){
-		parent=left_first;
-		while(parent&&parent->left){
-			parent->left->next=parent->right;
-			if(parent->next){
-				parent->right->next=parent->next->left;
-			}
-			parent=parent->next;
-		}
-		left_first=left_first->left;
+class BST_Node{
+public:
+	bool isLocked(){
+		return lock_;
 	}
-}
+	void lock(){
+		if(!lock_&&numoflocks_==0){
+			shared_ptr<BST_Node> ptr = parent_;
+			while(ptr){
+				if(ptr->lock_){
+					return;
+				}
+				ptr=ptr->parent_;
+			}
+			lock_=true;
+			ptr=parent_;
+			while(ptr){
+				ptr->numoflocks_++;
+				ptr=ptr->parent_;
+			}
+		}
+	}
+	void unLock(){
+		if(lock_){
+			shared_ptr<BST_Node> ptr = parent_;
+			while(ptr){
+				ptr->numoflocks_--;
+				ptr=ptr->parent_;
+			}
+			lock_=false;
+		}
+	}
+
+private:
+	shared_ptr<BST_Node> left_,right_,parent_;
+	bool lock_;
+	int numoflocks_;
+};
 int main(){
 	
 }
