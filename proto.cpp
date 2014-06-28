@@ -29,10 +29,35 @@ vector<int> merge_sort(vector<vector<int>>& vec){
 	return result;
 }
 
+vector<int> k_increasing_decreasing(const vector<int>& input){
+	vector<vector<int>> result;
+	bool is_increasing = true;
+	int start_index = 0;
+	for(int i=1;i<input.size();i++){
+		if((input[i-1]<input[i]&&!is_increasing)||(input[i-1]>=input[i]&&is_increasing)){
+			if(is_increasing){
+				result.emplace_back(input.cbegin()+start_index,input.cbegin()+i);
+			}else{
+				result.emplace_back(input.crbegin()+input.size()-i,input.crbegin()+input.size()-start_index);
+			}
+			start_index = i;
+			is_increasing=!is_increasing;
+		}
+	}
+	if(is_increasing){
+		result.emplace_back(input.cbegin()+start_index,input.cend());
+	}else{
+		result.emplace_back(input.crbegin(),input.crbegin()+input.size()-start_index);
+	}
+	return merge_sort(result);
+}
+
 int main(){
-		vector<vector<int>> vec={{1,10,100},{2,20,200},{3,30,300}};
-	vector<int> res = merge_sort(vec);
+	vector<int> input = {1,3,5,4,2,6,8,7,5};
+	vector<int> res = k_increasing_decreasing(input);
 	for(int x : res){
 		cout<<x<<" ";
 	}
 }
+
+
