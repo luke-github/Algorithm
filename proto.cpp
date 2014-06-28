@@ -1,26 +1,59 @@
 #include <iostream>
 #include <queue>
+#include <vector>
 #include <sstream>
+#include <array>
+#include <complex>
 using namespace std;
 
-void almost_sorted(istringstream* sin, int k){
-	priority_queue<int,vector<int>,greater<int>> min_queue;
-	int x;
-	for(int i=0;i<k&&*sin>>x;i++){
-		min_queue.emplace(x);
+class Star{
+public:
+	double distance() const{
+		return sqrt(x_*x_+y_*y_+z_*z_);
 	}
-	while(*sin>>x){
-		min_queue.emplace(x);
-		cout<<min_queue.top()<<" ";
-		min_queue.pop();
+	bool operator < (const Star& s) const{
+		return distance() < s.distance();
 	}
-	while(!min_queue.empty()){
-		cout<<min_queue.top()<<" ";
-		min_queue.pop();
+	int id_;
+	double x_,y_,z_;
+};
+
+vector<Star> cloest_set(istringstream* sin, int k){
+	priority_queue<Star,vector<Star>> max_queue;
+	string line;
+	while(getline(*sin,line)){
+		stringstream ss(line);
+		string buf;
+		getline(ss,buf,',');
+		int id = stoi(buf);
+		array<double,3> data;
+		for(int i=0;i<3;i++){
+			getline(ss,buf,',');
+			data[i]=stod(buf);
+		}
+		Star s{id,data[0],data[1],data[2]};
+		if(k==max_queue.size()){
+			if(s<max_queue.top()){
+				max_queue.pop();
+				max_queue.emplace(s);
+			}
+		}else{
+			max_queue.emplace(s);
+		}
 	}
+	vector<Star> result;
+	while(!max_queue.empty()){
+		result.emplace_back(max_queue.top());
+		max_queue.pop();
+	}
+	return result;
 }
+
 int main(){
-	string input = " 5 4 3 1 2 8 10 9 13 15 11";
+	string input = "1,1,1,1";
+	input.append("\n2,2,2,2\n3,3,3,3\n4,4,4,4\n5,5,5,5\n");
 	istringstream ss(input);
-	almost_sorted(&ss,3);
+	vector<Star> result = cloest_set(&ss,3);
+	for(Star x:result)
+		cout<<x.id_<<" "<<x.distance()<<endl;
 }
