@@ -15,6 +15,6 @@ int smallest_search(vector<int>& vec){
 	return vec[l];
 }
 int main(){
-	vector<int> input = {4,5,6,7,8,9,10,1,2,3};
+	vector<int> input = {4,5,6,7,8,9,10,10,10,10,10,1,2,2,2,2,2,3};
 	cout<<smallest_search(input);
 }
