@@ -4,32 +4,60 @@
 using namespace std;
 
 struct cmp{
-	bool operator ()(const pair<int,int>& a,const pair<int,int>& b){
-		return a.second<b.second;
+	bool operator()(const pair<int,int>&a, pair<int,int>&b){
+		return a.first<b.first;
 	}
 };
 
-vector<int> k_largest_element(vector<int>& vec, int k){
-	vector<int> result;
-	priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> max_heap;
-	size_t index;
-	max_heap.emplace(0,vec[0]);
-	for(int i=0;i<k;i++){
-		index = max_heap.top().first;
-		result.emplace_back(max_heap.top().second);
-		max_heap.pop();
-		if((index<<1)+1<vec.size()){
-			max_heap.emplace((index<<1)+1,vec[(index<<1)+1]);
-		}
-		if((index<<1)+2<vec.size()){
-			max_heap.emplace((index<<1)+2,vec[(index<<1)+2]);
-		}
+class My_Stack{
+public:
+	void push(int x){
+		max_heap_.emplace(index_++,x);
 	}
-	return result;
-}
+	int pop(){
+		int res = max_heap_.top().second;
+		max_heap_.pop();
+		return res;
+	}
+	int peek(){
+		return max_heap_.top().second;
+	}
+private:
+	int index_=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> max_heap_;
+};
+
+class My_Queue{
+public:
+	void push(int x){
+		max_heap_.emplace(index_--,x);
+	}
+	int pop(){
+		int res = max_heap_.top().second;
+		max_heap_.pop();
+		return res;
+	}
+	int peek(){
+		return max_heap_.top().second;
+	}
+private:
+	int index_=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> max_heap_;
+};
+
 int main(){
-	vector<int> input = {100,90,50,89,87,49,48,86,85,84,83,47,46,45,44};
-	vector<int> result = k_largest_element(input,5);
-	for(int x : result)
-		cout<<x<<" ";
+	My_Stack st;
+	st.push(1);
+	st.push(2);
+	st.push(3);
+	cout<<st.pop();
+	cout<<st.pop();
+	cout<<st.pop()<<endl;
+	My_Queue q;
+	q.push(1);
+	q.push(2);
+	q.push(3);
+	cout<<q.pop();
+	cout<<q.pop();
+	cout<<q.pop();
 }
