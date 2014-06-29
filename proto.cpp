@@ -1,59 +1,37 @@
 #include <iostream>
-#include <queue>
-#include <vector>
 #include <sstream>
-#include <array>
-#include <complex>
+#include <vector>
+#include <queue>
 using namespace std;
 
-class Star{
-public:
-	double distance() const{
-		return sqrt(x_*x_+y_*y_+z_*z_);
-	}
-	bool operator < (const Star& s) const{
-		return distance() < s.distance();
-	}
-	int id_;
-	double x_,y_,z_;
-};
-
-vector<Star> cloest_set(istringstream* sin, int k){
-	priority_queue<Star,vector<Star>> max_queue;
-	string line;
-	while(getline(*sin,line)){
-		stringstream ss(line);
-		string buf;
-		getline(ss,buf,',');
-		int id = stoi(buf);
-		array<double,3> data;
-		for(int i=0;i<3;i++){
-			getline(ss,buf,',');
-			data[i]=stod(buf);
-		}
-		Star s{id,data[0],data[1],data[2]};
-		if(k==max_queue.size()){
-			if(s<max_queue.top()){
-				max_queue.pop();
-				max_queue.emplace(s);
-			}
+void online_median(istringstream* sin){
+	priority_queue<int,vector<int>,greater<int>> high;
+	priority_queue<int,vector<int>,less<int>> low;
+	int x;
+	while(*sin>>x){
+		if(!low.empty()&&x>low.top()){
+			high.emplace(x);
 		}else{
-			max_queue.emplace(s);
+			low.emplace(x);
+		}
+		if(high.size()>(low.size()+1)){
+			low.emplace(high.top());
+			high.pop();
+		}else if(low.size()>(high.size()+1)){
+			high.emplace(low.top());
+			low.pop();
+		}
+		if(high.size()==low.size()){
+			cout<<0.5*(low.top()+high.top())<<endl;
+		}
+		else{
+			cout<<(high.size()>low.size()? high.top() : low.top())<<endl;
 		}
 	}
-	vector<Star> result;
-	while(!max_queue.empty()){
-		result.emplace_back(max_queue.top());
-		max_queue.pop();
-	}
-	return result;
 }
 
 int main(){
-	string input = "1,1,1,1";
-	input.append("\n2,2,2,2\n3,3,3,3\n4,4,4,4\n5,5,5,5\n");
-	istringstream ss(input);
-	vector<Star> result = cloest_set(&ss,3);
-	for(Star x:result)
-		cout<<x.id_<<" "<<x.distance()<<endl;
+	string input1 = "1 2 3 4 5 6 7 8 9 10";
+	istringstream ss1(input1);
+	online_median(&ss1);
 }
