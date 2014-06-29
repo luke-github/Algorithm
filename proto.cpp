@@ -1,63 +1,24 @@
 #include <iostream>
-#include <queue>
 #include <vector>
 using namespace std;
 
-struct cmp{
-	bool operator()(const pair<int,int>&a, pair<int,int>&b){
-		return a.first<b.first;
+int enhance_binary_search(vector<int>& vec, int k){
+	int l=0,r=vec.size()-1,res=-1;
+	while(l<=r){
+		int m = (l+r)/2;
+		if(vec[m]==k){
+			res=m;
+			r=m-1;
+		}else if(k>vec[m]){
+			l=m+1;
+		}else{
+			r=m-1;
+		}
 	}
-};
-
-class My_Stack{
-public:
-	void push(int x){
-		max_heap_.emplace(index_++,x);
-	}
-	int pop(){
-		int res = max_heap_.top().second;
-		max_heap_.pop();
-		return res;
-	}
-	int peek(){
-		return max_heap_.top().second;
-	}
-private:
-	int index_=0;
-	priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> max_heap_;
-};
-
-class My_Queue{
-public:
-	void push(int x){
-		max_heap_.emplace(index_--,x);
-	}
-	int pop(){
-		int res = max_heap_.top().second;
-		max_heap_.pop();
-		return res;
-	}
-	int peek(){
-		return max_heap_.top().second;
-	}
-private:
-	int index_=0;
-	priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> max_heap_;
-};
+	return res;
+}
 
 int main(){
-	My_Stack st;
-	st.push(1);
-	st.push(2);
-	st.push(3);
-	cout<<st.pop();
-	cout<<st.pop();
-	cout<<st.pop()<<endl;
-	My_Queue q;
-	q.push(1);
-	q.push(2);
-	q.push(3);
-	cout<<q.pop();
-	cout<<q.pop();
-	cout<<q.pop();
+	vector<int> input = {1,2,3,6,6,6,6,6,7,8};
+	cout<<enhance_binary_search(input,6);
 }
