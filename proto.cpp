@@ -1,37 +1,35 @@
 #include <iostream>
-#include <sstream>
-#include <vector>
 #include <queue>
+#include <vector>
 using namespace std;
 
-void online_median(istringstream* sin){
-	priority_queue<int,vector<int>,greater<int>> high;
-	priority_queue<int,vector<int>,less<int>> low;
-	int x;
-	while(*sin>>x){
-		if(!low.empty()&&x>low.top()){
-			high.emplace(x);
-		}else{
-			low.emplace(x);
+struct cmp{
+	bool operator ()(const pair<int,int>& a,const pair<int,int>& b){
+		return a.second<b.second;
+	}
+};
+
+vector<int> k_largest_element(vector<int>& vec, int k){
+	vector<int> result;
+	priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> max_heap;
+	size_t index;
+	max_heap.emplace(0,vec[0]);
+	for(int i=0;i<k;i++){
+		index = max_heap.top().first;
+		result.emplace_back(max_heap.top().second);
+		max_heap.pop();
+		if((index<<1)+1<vec.size()){
+			max_heap.emplace((index<<1)+1,vec[(index<<1)+1]);
 		}
-		if(high.size()>(low.size()+1)){
-			low.emplace(high.top());
-			high.pop();
-		}else if(low.size()>(high.size()+1)){
-			high.emplace(low.top());
-			low.pop();
-		}
-		if(high.size()==low.size()){
-			cout<<0.5*(low.top()+high.top())<<endl;
-		}
-		else{
-			cout<<(high.size()>low.size()? high.top() : low.top())<<endl;
+		if((index<<1)+2<vec.size()){
+			max_heap.emplace((index<<1)+2,vec[(index<<1)+2]);
 		}
 	}
+	return result;
 }
-
 int main(){
-	string input1 = "1 2 3 4 5 6 7 8 9 10";
-	istringstream ss1(input1);
-	online_median(&ss1);
+	vector<int> input = {100,90,50,89,87,49,48,86,85,84,83,47,46,45,44};
+	vector<int> result = k_largest_element(input,5);
+	for(int x : result)
+		cout<<x<<" ";
 }
