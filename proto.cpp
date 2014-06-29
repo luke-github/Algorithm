@@ -2,15 +2,24 @@
 #include <vector>
 using namespace std;
 
-int search_smallest(vector<int>& vec){
-	int l=0,r=vec.size()-1;
-	while(l<r){
+int square_root_integer(int x){
+	int l=0,r=x;
+	while(l+1<r){
 		int m = (l+r)>>1;
-		if(vec[m]>vec[r]){
-			l=m+1;
-		}else{
-			r=m;
+		int square = m*m;
+		if(square==x){
+			return m;
 		}
+		else if(square>x){
+			r=m-1;
+		}else
+			l=m;
 	}
-	return vec[l];
+	if(r*r>x)
+		return l;
+	else 
+		return r;
+}
+int main(){
+	cout<<square_root_integer(125);
 }
