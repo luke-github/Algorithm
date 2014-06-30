@@ -1,12 +1,8 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
-int compare(const double& a,const double& b){
-	double diff = (a-b)/b;
-	int res = diff < -numeric_limits<double>::epsilon()? -1 : diff > numeric_limits<double>::epsilon();
-	return res;
-}
+int compare(double a,double b);
+
 
 double square_root_real(double x){
 	double l,r;
@@ -29,6 +25,13 @@ double square_root_real(double x){
 	return l;
 }
 
+int compare(double a,double b){
+	double diff = (a-b)/b;
+	int result =  diff<-numeric_limits<double>::epsilon()? -1 : diff>numeric_limits<double>::epsilon();
+	return result;
+}
+
 int main(){
-	cout<<square_root_real(10.0);
+	double input = 11111111232434;
+	cout<<square_root_real(input);
 }
