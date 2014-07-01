@@ -2,33 +2,26 @@
 #include <vector>
 using namespace std;
 
-int compare(const double& a,const double& b){
-	double diff = (a-b)/b;
-	int res = diff < -numeric_limits<double>::epsilon()? -1 : diff > numeric_limits<double>::epsilon();
-	return res;
+pair<int,int> find_min_max(vector<int>& vec){
+	if(vec.size()<=1){
+		return {vec.front(),vec.front()};
+	}
+	pair<int,int> result = minmax(vec[0],vec[1]);
+	for(int i=2;i<vec.size()-1;i++){	
+		pair<int,int> local = minmax(vec[i],vec[i+1]);
+		result = {min(result.first,local.first),
+					max(result.second,local.second)};
+	}
+	if(vec.size()&1){
+		result = {min(result.first,vec.back()),
+			max(result.second, vec.back())};
+	}
+	return result;
 }
 
-double square_root_real(double x){
-	double l,r;
-	if(compare(x,1.0)==-1){
-		l=x,r=1.0;
-	}else{
-		l=1.0,r=x;
-	}
-	while(compare(l,r)==-1){
-		double m = (l+r)*0.5;
-		double res = m*m;
-		if(compare(res,x)==0){
-			return m;
-		}else if(compare(res,x)==1){
-			r=m;
-		}else{
-			l=m;
-		}
-	}
-	return l;
-}
 
 int main(){
-	cout<<square_root_real(10.0);
+	vector<int> input = {1,2,3,4,5,6,7,8,9,0};
+	pair<int,int> res = find_min_max(input);
+	cout<<res.first<<" "<<res.second;
 }
