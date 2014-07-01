@@ -1,41 +1,30 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
-#include <random>
 using namespace std;
 
-int partition(int left, int right, int pivot, vector<int>* v);
-
-int kth_greatest_value(vector<int>& vec, int k){
-	int left=0,right=vec.size()-1;
-	while(left<=right){
-		default_random_engine gen((random_device())());
-		uniform_int_distribution<int> dis(left,right);
-		int position = partition(left,right,dis(gen),&vec);
-		if(position==k-1){
-			return vec[position];
-		}else if(position>k-1){
-			right = position -1;
-		}else{
-			left = position+1;
+int find_missing_address(ifstream* ifs){
+	vector<size_t> counter(1<<16,0);
+	unsigned int x;
+	while(*ifs>>x){
+		++counter[x>>16];
+	}
+	for(int i=0;i<counter.size();i++){
+		if(counter[i]<(1<<16)){
+			ifs->clear();
+			ifs->seekg(0,ios::beg);
+			bitset<(1<<16)> bit_set;
+			while(*ifs>>x){
+				if((x>>16)==i){
+					bit_set.set(((1<<16)-1)&x);
+				}
+			}
+			ifs->close();
+			for(int j=0;j<(1<<16);j++){
+				if(bit_set.test(j)==0)
+					return i<<16|j;
+			}
 		}
 	}
-	throw invalid_argument("no result");
-}
-
-int partition(int left, int right, int pivot, vector<int>* v){
-	int pivot_value = (*v)[pivot];
-	swap((*v)[pivot],(*v)[right]);
-	int larger_index = left;
-	for(int i=left;i<right;i++){
-		if((*v)[i]>pivot_value){
-			swap((*v)[i],(*v)[larger_index++]);
-		}
-	}
-	swap((*v)[right],(*v)[larger_index]);
-	return larger_index;
-}
-
-int main(){
-	vector<int> input = {9,8,7,6,5,4,3,2,1};
-	cout<<kth_greatest_value(input,1);
+	return -1;
 }
