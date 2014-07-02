@@ -1,25 +1,53 @@
 #include <iostream>
 #include <unordered_map>
-#include <vector>
+#include <list>
 using namespace std;
 
-bool anynomous_letter(const string& L,const string& M){
-	unordered_map<char,int> hash;
-	for_each(L.begin(),L.end(),[&hash](const char& c){++hash[c];});
-	for(const char&c : M){
-		auto p = hash.find(c);
-		if(p!=hash.cend()){
-			if(--hash[c]==0){
-				hash.erase(p);
-				if(hash.empty())
-					return true;
+template<size_t capacity>
+class LRU{
+public:
+	bool lookup(int isbn,int* price){
+		auto it = cache_.find(isbn);
+		if(it==cache_.end())
+			return false;
+		*price = it->second.second;
+		moveToFront(isbn,it);
+		return true;
+	}
+	void insert(int isbn,int price){
+		auto it = cache_.find(isbn);
+		if(it!=cache_.end()){
+			moveToFront(isbn,it);
+		}else{
+			if(cache_.size()==capacity){
+				cache_.erase(data_.back());
+				data_.pop_back();
 			}
+			data_.emplace_front(isbn);
+			cache_[isbn]={data_.begin(),price};
 		}
 	}
-	return false;
-}
+	bool erase(int isbn){
+		auto it = cache_.find(isbn);
+		if(it==cache_.end()){
+			return false;
+		}
+		data_.erase(it->second.first);
+		cache_.erase(it);
+		return true;
+	}
+private:
+	typedef unordered_map<int,pair<list<int>::iterator,int>> Table;
+	Table cache_;
+	list<int> data_;
+	void moveToFront(int isbn, Table::iterator& it){
+		data_.erase(it->second.first);
+		data_.emplace_front(isbn);
+		it->second.first=data_.begin();
+	}
+};
+
 int main(){
-	string input1= "aabbcc";
-	string input2 = "aaabbbcdc";
-	cout<<anynomous_letter(input1,input2);
+	LRU<5> t_lru;
+	
 }
