@@ -1,26 +1,20 @@
 #include <iostream>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
 using namespace std;
 
-void dispatch_anagram(const vector<string>& dict){
-	unordered_map<string,vector<string>> hash;
-	for(const string& s : dict){
-		string sorted_str(s);
-		sort(sorted_str.begin(),sorted_str.end());
-		hash[sorted_str].emplace_back(s);
+bool check_parlindrom(const string& s){
+	unordered_map<char,int> hash;
+	for_each(s.begin(),s.end(),[&hash](const char& c){hash[c]++;});
+	int counter = 0;
+	for(const pair<char,int>& x : hash){
+		if(x.second&1 && ++counter>1)
+			break;
 	}
-	for(const pair<string,vector<string>>& p : hash){
-		if(p.second.size()>1){
-			for(const string& x : p.second){
-				cout<<x<<":";
-			}
-			cout<<endl;
-		}
-	}
+	return counter<=1;
 }
 
 int main(){
-	vector<string> input = {"abc","acb","bac","qwe","ewq","wqe","wsx","wxs"};
-	dispatch_anagram(input);
+	string input = "aabbccfe";
+	cout<<check_parlindrom(input);
 }
