@@ -49,5 +49,11 @@ private:
 
 int main(){
 	LRU<5> t_lru;
-	
+	t_lru.insert(1,10);
+	t_lru.insert(2,20);
+	t_lru.insert(3,30);
+	t_lru.insert(4,40);
+	t_lru.insert(5,50);
+	t_lru.insert(6,60);
+
 }
