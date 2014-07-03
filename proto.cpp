@@ -2,14 +2,20 @@
 #include <vector>
 using namespace std;
 
-void merge_sort(int a[],int b[],int m,int n){
-	int length = m+n-1;
-	int i=m-1;
-	int j=n-1;
-	while(i>=0&&j>=0){
-		a[length--]=a[i]>b[j]?a[i--]:b[j--];
+void count_occurance(string s){
+	sort(s.begin(),s.end());
+	int counter=1;
+	for(int i=1;i<s.size();i++){
+		if(s[i-1]==s[i]){
+			counter++;
+		}else{
+			cout<<s[i-1]<<" "<<counter<<endl;
+			counter=1;
+		}
 	}
-	while(j>=0){
-		a[length--]=b[j--];
-	}
+}
+
+int main(){
+	string input = "asdfkjaklsnmvxzc";
+	count_occurance(input);
 }
