@@ -2,29 +2,14 @@
 #include <vector>
 using namespace std;
 
-vector<int> common_element(vector<int>& a, vector<int>& b){
-	vector<int> res;
-	int i=0,j=0;
-	while(i<a.size()&&j<b.size()){
-		if(a[i]==b[j]&&(i==0||a[i]!=a[i-1])){
-			res.emplace_back(a[i]);
-			i++;
-			j++;
-		}else if(a[i]>b[j]){
-			j++;
-		}else{
-			i++;
-		}
+void merge_sort(int a[],int b[],int m,int n){
+	int length = m+n-1;
+	int i=m-1;
+	int j=n-1;
+	while(i>=0&&j>=0){
+		a[length--]=a[i]>b[j]?a[i--]:b[j--];
 	}
-	return res;
-}
-
-
-int main(){
-	vector<int> input1 = {1,2,3,4,5,6};
-	vector<int> input2 = {1,5,6,7,8,9};
-	vector<int> result = common_element(input1,input2);
-	for(int x : result){
-		cout<<x<<" ";
+	while(j>=0){
+		a[length--]=b[j--];
 	}
 }
