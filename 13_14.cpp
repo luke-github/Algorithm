@@ -1,19 +1,19 @@
 #include <iostream>
-#include <unordered_map>
-#include <set>
 #include <vector>
 #include <fstream>
+#include <unordered_map>
+#include <set>
 using namespace std;
 
 pair<string,string> affinity_pair(ifstream* ifs){
 	unordered_map<string,set<string>> hash;
 	string page,user;
-	pair<string,string> res;
-	int max_count=0;
 	while(*ifs>>page>>user){
 		hash[page].emplace(user);
 	}
-	for(auto a=hash.begin();a!=hash.end();a++){
+	pair<string,string> res;
+	int max_count = 0;
+	for(auto a = hash.begin();a!=hash.end();a++){
 		auto b=a;
 		b++;
 		for(;b!=hash.end();b++){
@@ -28,7 +28,6 @@ pair<string,string> affinity_pair(ifstream* ifs){
 	}
 	return res;
 }
-
 int main(){
 	ifstream is("metafile");
 	pair<string,string> res = affinity_pair(&is);
