@@ -1,30 +1,30 @@
 #include <iostream>
-#include <unordered_set>
 #include <vector>
 using namespace std;
 
-bool check_collatz_conjecture(int n){
-	unordered_set<long> table;
-	for(int i=2;i<=n;i++){
-		unordered_set<long> sequence;
-		int test_i = i;
-		while(test_i>i){
-			if(!sequence.emplace(test_i).second){
-				return false;
-			}
-			if(test_i&1){
-				if(!table.emplace(test_i).second){
-					break;
-				}
-				test_i=3*test_i+1;
-			}else{
-				test_i=test_i>>1;
-			}
+vector<int> common_element(vector<int>& a, vector<int>& b){
+	vector<int> res;
+	int i=0,j=0;
+	while(i<a.size()&&j<b.size()){
+		if(a[i]==b[j]&&(i==0||a[i]!=a[i-1])){
+			res.emplace_back(a[i]);
+			i++;
+			j++;
+		}else if(a[i]>b[j]){
+			j++;
+		}else{
+			i++;
 		}
 	}
-	return true;
+	return res;
 }
 
+
 int main(){
-	cout<<check_collatz_conjecture(100);
+	vector<int> input1 = {1,2,3,4,5,6};
+	vector<int> input2 = {1,5,6,7,8,9};
+	vector<int> result = common_element(input1,input2);
+	for(int x : result){
+		cout<<x<<" ";
+	}
 }
