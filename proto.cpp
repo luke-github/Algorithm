@@ -1,45 +1,30 @@
 #include <iostream>
+#include <unordered_set>
 #include <vector>
-#include <unordered_map>
 using namespace std;
 
-bool check_match(const string& s,unordered_map<string,int>& dict,int start,int unit_size,int words_size);
-
-vector<int> find_substrings(const string& s,const vector<string>& words){
-	unordered_map<string,int> dict;
-	for(string word: words){
-		dict[word]++;
-	}
-	vector<int> res;
-	size_t unit_size = words.front().size();
-	for(int i=0;i+unit_size*words.size()<s.size();i++){
-		if(check_match(s,dict,i,unit_size,words.size())){
-			res.emplace_back(i);
-		}
-	}
-	return res;
-}
-
-bool check_match(const string& s,unordered_map<string,int>& dict,int start,int unit_size,int words_size){
-	unordered_map<string,int> cur_dict;
-	for(int i=0;i<words_size;i++){
-		string cur_word = s.substr(start+i*unit_size,unit_size);
-		auto it = dict.find(cur_word);
-		if(it==dict.end()){
-			return false;
-		}
-		cur_dict[cur_word]++;
-		if(cur_dict[cur_word]>dict[cur_word]){
-			return false;
+bool check_collatz_conjecture(int n){
+	unordered_set<long> table;
+	for(int i=2;i<=n;i++){
+		unordered_set<long> sequence;
+		int test_i = i;
+		while(test_i>i){
+			if(!sequence.emplace(test_i).second){
+				return false;
+			}
+			if(test_i&1){
+				if(!table.emplace(test_i).second){
+					break;
+				}
+				test_i=3*test_i+1;
+			}else{
+				test_i=test_i>>1;
+			}
 		}
 	}
 	return true;
 }
 
 int main(){
-	string input1 = "abcdabcdabcdabcdabcd";
-	vector<string> input2 = {"a","b","c"};
-	vector<int> res = find_substrings(input1,input2);
-	for(int x : res)
-		cout<<x<<" ";
+	cout<<check_collatz_conjecture(100);
 }

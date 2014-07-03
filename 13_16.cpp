@@ -27,5 +27,5 @@ bool collatz_conjecture(int n){
 }
 
 int main(){
-	cout<<collatz_conjecture(1100000);
+	cout<<collatz_conjecture(11);
 }
