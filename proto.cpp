@@ -7,46 +7,25 @@ struct interval{
 	int end;
 };
 
-struct endpoint{
-	bool operator < (const endpoint& e) const{
-		return time!=e.time ? time<e.time : (isStart&&!e.isStart);
+vector<interval> insert_interval(vector<interval>& vec, interval new_interval){
+	int i=0;
+	vector<interval> res;
+	while(i<vec.size()&&new_interval.start>vec[i].end){
+		res.emplace_back(vec[i]);
+		i++;
 	}
-	int time;
-	bool isStart;
-};
-
-int find_max_overlap(vector<interval>& vec){
-	int max_counter=0;
-	int counter=0;
-	vector<endpoint> points;
-	for(const interval x: vec){
-		points.emplace_back(endpoint{x.start,true});
-		points.emplace_back(endpoint{x.end,false});
+	while(i<vec.size()&&new_interval.end>=vec[i].start){
+		new_interval = {min(new_interval.start,vec[i].start),max(new_interval.end,vec[i].end)};
+		i++;
 	}
-	sort(points.begin(),points.end());
-	for(const endpoint x: points){
-		if(x.isStart){
-			max_counter=max(max_counter,++counter);
-		}else{
-			counter--;
-		}
-	}
-	return max_counter;
+	res.emplace_back(new_interval);
+	res.insert(res.end(),vec.begin()+i,vec.end());
+	return res;
 }
-
 int main(){
-	vector<interval> input = {{1,4},{2,5},{2,3},{4,9}};
-	cout<<find_max_overlap(input);
+	vector<interval> input = {{0,3},{4,6},{7,9},{11,13}};
+	vector<interval> result = insert_interval(input,interval{14,16});
+	for(interval x : result){
+		cout<<x.start<<"-"<<x.end<<" ";
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
