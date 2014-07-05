@@ -1,40 +1,44 @@
-#include <iostream>
-#include <set>
 #include <vector>
+#include <iostream>
 using namespace std;
 
-struct Interval{
-	int left,right;
-};
-
-struct leftCmp{
-	bool operator () (const Interval* a, const Interval* b) const{
-		return a->left!=b->left ? a->left < b->left : a->right < b->right;
+struct Player{
+	int height;
+	bool operator < (const Player& s) const{
+		return height < s.height;
 	}
 };
 
-struct rightCmp{
-	bool operator () (const Interval* a, const Interval* b) const{
-		return a->right!=b->right ? a->right < b->right : a->left < b->left;
-	}
-};
-
-vector<int> minimal_visits(vector<Interval>& vec){
-	vector<int> res;
-	set<const Interval*, leftCmp> L;
-	set<const Interval*, rightCmp> R;
-	for(Interval x: vec){
-		L.emplace(&x);
-		R.emplace(&x);
-	}
-	while(!L.empty()&&!R.empty()){
-		int b = (*R.cbegin())->right;
-		auto it = L.cbegin();
-		res.emplace_back(b);
-		while(it!=L.cend()&&(*it)->left<=b){
-			R.erase(*it);
-			L.erase(it++);
+class Team{
+public:
+	Team(vector<int>& heights){
+		for(int x: heights){
+			team_members_.emplace_back(Player{x});
 		}
 	}
-	return res;
+	bool operator < (const Team& another) const{
+		std::vector<Player> t1(sort_member_func());
+		std::vector<Player> t2(another.sort_member_func());
+		for(int i=0;i<t1.size();i++){
+			if(!(t1[i]<t2[i])){
+				return false;
+			}
+		}
+		return true;
+	}
+private:
+	vector<Player> sort_member_func() const{
+		vector<Player> sorted_array(team_members_);
+		sort(sorted_array.begin(),sorted_array.end());
+		return sorted_array;
+	}
+	vector<Player> team_members_;
+};
+
+int main(){
+	vector<int> team1 = {1,3,2,4,5,6,8};
+	vector<int> team2 = {11,14,13,12,16,19,15};
+	Team T1(team1);
+	Team T2(team2);
+	cout<<(T1<T2);
 }
