@@ -2,30 +2,33 @@
 #include <vector>
 using namespace std;
 
-struct interval{
-	int start;
-	int end;
+struct Interval{
+private:
+	struct Endpoint{
+		bool isClose;
+		int val;
+	};
+public:
+	Endpoint left, right;
+	bool operator < (const Interval& s) const {
+		return left.val!=s.left.val ? left.val < s.left.val : left.isClose&&!s.left.isClose;
+	}
 };
 
-vector<interval> insert_interval(vector<interval>& vec, interval new_interval){
-	int i=0;
-	vector<interval> res;
-	while(i<vec.size()&&new_interval.start>vec[i].end){
-		res.emplace_back(vec[i]);
-		i++;
+vector<Interval> union_intervals(vector<Interval>& vec){
+	vector<Interval> res;
+	sort(vec.begin(),vec.end());
+	Interval cur = vec.front();
+	for(int i=1;i<vec.size();i++){
+		if((vec[i].left.val<cur.right.val)||((vec[i].left.val==cur.right.val)&&(vec[i].left.isClose||cur.right.isClose))){
+			if((vec[i].right.val>cur.right.val)||((vec[i].right.val==cur.right.val)&&(vec[i].right.isClose||cur.right.isClose))){
+				cur.right = vec[i].right;
+			}
+		}else{
+			res.emplace_back(cur);
+			cur = vec[i];
+		}
 	}
-	while(i<vec.size()&&new_interval.end>=vec[i].start){
-		new_interval = {min(new_interval.start,vec[i].start),max(new_interval.end,vec[i].end)};
-		i++;
-	}
-	res.emplace_back(new_interval);
-	res.insert(res.end(),vec.begin()+i,vec.end());
+	res.emplace_back(cur);
 	return res;
-}
-int main(){
-	vector<interval> input = {{0,3},{4,6},{7,9},{11,13}};
-	vector<interval> result = insert_interval(input,interval{14,16});
-	for(interval x : result){
-		cout<<x.start<<"-"<<x.end<<" ";
-	}
 }
