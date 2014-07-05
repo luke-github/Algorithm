@@ -1,34 +1,40 @@
 #include <iostream>
+#include <set>
 #include <vector>
 using namespace std;
 
 struct Interval{
-private:
-	struct Endpoint{
-		bool isClose;
-		int val;
-	};
-public:
-	Endpoint left, right;
-	bool operator < (const Interval& s) const {
-		return left.val!=s.left.val ? left.val < s.left.val : left.isClose&&!s.left.isClose;
+	int left,right;
+};
+
+struct leftCmp{
+	bool operator () (const Interval* a, const Interval* b) const{
+		return a->left!=b->left ? a->left < b->left : a->right < b->right;
 	}
 };
 
-vector<Interval> union_intervals(vector<Interval>& vec){
-	vector<Interval> res;
-	sort(vec.begin(),vec.end());
-	Interval cur = vec.front();
-	for(int i=1;i<vec.size();i++){
-		if((vec[i].left.val<cur.right.val)||((vec[i].left.val==cur.right.val)&&(vec[i].left.isClose||cur.right.isClose))){
-			if((vec[i].right.val>cur.right.val)||((vec[i].right.val==cur.right.val)&&(vec[i].right.isClose||cur.right.isClose))){
-				cur.right = vec[i].right;
-			}
-		}else{
-			res.emplace_back(cur);
-			cur = vec[i];
+struct rightCmp{
+	bool operator () (const Interval* a, const Interval* b) const{
+		return a->right!=b->right ? a->right < b->right : a->left < b->left;
+	}
+};
+
+vector<int> minimal_visits(vector<Interval>& vec){
+	vector<int> res;
+	set<const Interval*, leftCmp> L;
+	set<const Interval*, rightCmp> R;
+	for(Interval x: vec){
+		L.emplace(&x);
+		R.emplace(&x);
+	}
+	while(!L.empty()&&!R.empty()){
+		int b = (*R.cbegin())->right;
+		auto it = L.cbegin();
+		res.emplace_back(b);
+		while(it!=L.cend()&&(*it)->left<=b){
+			R.erase(*it);
+			L.erase(it++);
 		}
 	}
-	res.emplace_back(cur);
 	return res;
 }

@@ -31,7 +31,7 @@ vector<int> minimal_visits(vector<Interval>& vec){
 		int b = R.cbegin()->right;
 		res.emplace_back(b);
 		auto it = L.cbegin();
-		while(it!=L.cend()&&(*it).left<=b){
+		while(it!=L.cend()&&it->left<=b){
 			R.erase(*it);
 			L.erase(it++);
 		}
