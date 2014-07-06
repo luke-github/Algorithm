@@ -24,4 +24,4 @@ void indirect_sort(const string& filename){
 
 int main(){
 	indirect_sort("input14_15");
-}
+} 
