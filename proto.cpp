@@ -1,6 +1,5 @@
 #include <iostream>
 #include <memory>
-#include <numeric>
 using namespace std;
 
 template<class T>
@@ -10,35 +9,28 @@ struct BST{
 	shared_ptr<BST<T>> right;
 };
 
-bool is_BST_helper(shared_ptr<BST<int>>& head, int low, int high){
+shared_ptr<BST<int>> k_node(shared_ptr<BST<int>>& head, int k){
 	if(head==nullptr){
-		return true;
+		return nullptr;
 	}
-	else if(head->data < low || head->data > high){
-		return false;
+	else if(head->data==k){
+		shared_ptr<BST<int>> node = k_node(head->left,k);
+		return node? node : head;
 	}
-	return is_BST_helper(head->left,low,head->data) && is_BST_helper(head->right,head->data,high);
+	return k_node(head->data>k?head->right:head->left,k);
 }
 
-
-bool is_BST(shared_ptr<BST<int>>& head){
-	return is_BST_helper(head,1<<31,(1<<31)-1);
+shared_ptr<BST<int>> k_node_iterate(shared_ptr<BST<int>>& head, int k){
+	shared_ptr<BST<int>> res =  nullptr, cur = head;
+	while(cur){
+		if(cur->data<k){
+			cur=cur->right;
+		}else if(cur->data > k){
+			cur=cur->left;
+		}else{
+			res = cur;
+			cur=cur->left;
+		}
+	}
+	return res;
 }
-int main(){
-	shared_ptr<BST<int>> L1 = make_shared<BST<int>>(BST<int>{5,nullptr,nullptr});
-	shared_ptr<BST<int>> L2 = make_shared<BST<int>>(BST<int>{4,nullptr,nullptr});
-	shared_ptr<BST<int>> L3 = make_shared<BST<int>>(BST<int>{7,nullptr,nullptr});
-	shared_ptr<BST<int>> L4 = make_shared<BST<int>>(BST<int>{3,nullptr,nullptr});
-	shared_ptr<BST<int>> L5 = make_shared<BST<int>>(BST<int>{6,nullptr,nullptr});
-	L1->left = L2;
-	L1->right = L3;
-	L2->left = L4;
-	L3->left = L5;
-	cout<<is_BST(L1);
-}
-
-//     L1
-//    /  \
-//   L2  L3
-//  /    / 
-// L4   L5
