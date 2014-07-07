@@ -1,26 +1,44 @@
 #include <iostream>
-#include <vector>
-#include <fstream>
+#include <memory>
+#include <numeric>
 using namespace std;
 
-void indirect_sort(const string& filename){
-	ifstream ifs(filename);
-	int x;
-	vector<int> vec;
-	while(ifs>>x){
-		vec.emplace_back(x);
+template<class T>
+struct BST{
+	T data;
+	shared_ptr<BST<T>> left;
+	shared_ptr<BST<T>> right;
+};
+
+bool is_BST_helper(shared_ptr<BST<int>>& head, int low, int high){
+	if(head==nullptr){
+		return true;
 	}
-	vector<int*> point_vec;
-	for(int &x : vec){
-		point_vec.emplace_back(&x);
+	else if(head->data < low || head->data > high){
+		return false;
 	}
-	sort(point_vec.begin(),point_vec.end(),[](const int* a,const int* b)->bool{return *a<*b;});
-	ofstream ofs("output14_15");
-	for(const int* m : point_vec){
-		ofs<<*m<<endl;
-	}
+	return is_BST_helper(head->left,low,head->data) && is_BST_helper(head->right,head->data,high);
 }
 
-int main(){
-	indirect_sort("input14_15");
+
+bool is_BST(shared_ptr<BST<int>>& head){
+	return is_BST_helper(head,1<<31,(1<<31)-1);
 }
+int main(){
+	shared_ptr<BST<int>> L1 = make_shared<BST<int>>(BST<int>{5,nullptr,nullptr});
+	shared_ptr<BST<int>> L2 = make_shared<BST<int>>(BST<int>{4,nullptr,nullptr});
+	shared_ptr<BST<int>> L3 = make_shared<BST<int>>(BST<int>{7,nullptr,nullptr});
+	shared_ptr<BST<int>> L4 = make_shared<BST<int>>(BST<int>{3,nullptr,nullptr});
+	shared_ptr<BST<int>> L5 = make_shared<BST<int>>(BST<int>{6,nullptr,nullptr});
+	L1->left = L2;
+	L1->right = L3;
+	L2->left = L4;
+	L3->left = L5;
+	cout<<is_BST(L1);
+}
+
+//     L1
+//    /  \
+//   L2  L3
+//  /    / 
+// L4   L5
