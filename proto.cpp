@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <vector>
 using namespace std;
 
 template<class T>
@@ -9,30 +10,35 @@ struct BST{
 	shared_ptr<BST<T>> right;
 };
 
-shared_ptr<BST<int>> LCA_Algorithm(shared_ptr<BST<int>>& head,shared_ptr<BST<int>>& s,shared_ptr<BST<int>>& b){
-	shared_ptr<BST<int>> cur = head;
-	while(cur->data<s->data || cur->data>b->data){
-		while(cur->data<s->data){
-			cur=cur->right;
-		}
-		while(cur->data>b->data){
-			cur=cur->left;
-		}
+shared_ptr<BST<int>> rebuild_BST_handler(vector<int>& vec, int low, int high, int* index){
+	if(vec.size()==*index){
+		return nullptr;
 	}
-	return cur;
+	int cur = vec[*index];
+	if(cur<low || cur>high){
+		return nullptr;
+	}
+	++*index;
+	return make_shared<BST<int>>(BST<int>{cur,rebuild_BST_handler(vec,low,cur,index),rebuild_BST_handler(vec,cur,high,index)});
+}
+
+shared_ptr<BST<int>> rebuild_BST(vector<int>& vec){
+	int index=0;
+	return rebuild_BST_handler(vec,1<<31,(1<<31)-1,&index);
+}
+
+void pint_result(shared_ptr<BST<int>>& head){
+	if(head==nullptr){
+		return;
+	}
+	cout<<head->data<<"->";
+	pint_result(head->left);
+	pint_result(head->right);
 }
 
 
 int main(){
-	shared_ptr<BST<int>> L1 = make_shared<BST<int>>(BST<int>{5,nullptr,nullptr});
-	shared_ptr<BST<int>> L2 = make_shared<BST<int>>(BST<int>{4,nullptr,nullptr});
-	shared_ptr<BST<int>> L3 = make_shared<BST<int>>(BST<int>{7,nullptr,nullptr});
-	shared_ptr<BST<int>> L4 = make_shared<BST<int>>(BST<int>{3,nullptr,nullptr});
-	shared_ptr<BST<int>> L5 = make_shared<BST<int>>(BST<int>{6,nullptr,nullptr});
-	L1->left = L2;
-	L1->right = L3;
-	L2->left = L4;
-	L3->left = L5;
-	shared_ptr<BST<int>> res = LCA_Algorithm(L1,L2,L5);
-	cout<<res->data;
+	vector<int> input = {5,3,2,4,6};
+	shared_ptr<BST<int>> head = rebuild_BST(input);
+	pint_result(head);
 }
