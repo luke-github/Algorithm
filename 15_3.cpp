@@ -12,7 +12,7 @@ struct BST{
 shared_ptr<BST<int>> larger_than_k(shared_ptr<BST<int>>& head, int k){
 	shared_ptr<BST<int>> cur = head, res = nullptr;
 	bool found = false;
-	while(cur!=nullptr){
+	while(cur){
 		if(cur->data==k){
 			found=true;
 			cur=cur->right;
