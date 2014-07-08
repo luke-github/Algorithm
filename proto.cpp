@@ -1,39 +1,29 @@
+#include <list>
 #include <iostream>
-#include <set>
-#include <unordered_map>
-#include <numeric>
-#include <fstream>
+#include <memory>
 using namespace std;
 
-int find_sum_result(multiset<int>& vec){
-	auto it = vec.cbegin();
-	advance(it,3);
-	return accumulate(vec.cbegin(),it,0);
+template<class T>
+struct BST{
+	T data;
+	shared_ptr<BST<T>> left;
+	shared_ptr<BST<T>> right;
+};
+
+shared_ptr<BST<int>> larger_than(shared_ptr<BST<int>>& head, int k){
+	if(head==nullptr){
+		return nullptr;
+	}else if(head->data>=k){
+		auto node = larger_than(head->left,k);
+		return node?node:head;
+	}
+	return larger_than(head->right,k);
 }
 
-string top_score(ifstream* ifs){
-	unordered_map<string,multiset<int>> students_scores;
-	int score;
-	string name;
-	while(*ifs>>name>>score){
-		students_scores[name].emplace(score);
+list<shared_ptr<BST<int>>> range_nodes(shared_ptr<BST<int>>& head, int low, int high){
+	list<shared_ptr<BST<int>>> res;
+	for(auto it = larger_than(head, low);it&&it->data<=high;it=find_next(it)){
+		res.emplace_back(it);
 	}
-	int max_score = 1<<31;
-	string top_stu("there's no such student.");
-	for(auto it : students_scores){
-		if(it.second.size()>=3){
-			int current_sum = find_sum_result(it.second);
-			if(current_sum>max_score){
-				max_score=current_sum;
-				top_stu = it.first;
-			}
-		}
-	}
-	return top_stu;
-}
-
-int main(){
-	ifstream in("15_17_input");
-	string result = top_score(&in);
-	cout<<result;
+	return res;
 }
