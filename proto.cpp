@@ -1,53 +1,39 @@
 #include <iostream>
-#include <memory>
-#include <vector>
+#include <set>
+#include <unordered_map>
+#include <numeric>
+#include <fstream>
 using namespace std;
 
-template<class T>
-struct BST{
-	T data;
-	shared_ptr<BST<T>> left;
-	shared_ptr<BST<T>> right;
-};
-
-bool continue_search(shared_ptr<BST<int>> p, shared_ptr<BST<int>> t, shared_ptr<BST<int>> m, bool found_m){
-	while(p && p!=t){
-		if(p==m){
-			found_m=true;
-		}
-		p = p->data>t->data?p->left:p->right;
-	}
-	return p==t && found_m;
+int find_sum_result(multiset<int>& vec){
+	auto it = vec.cbegin();
+	advance(it,3);
+	return accumulate(vec.cbegin(),it,0);
 }
 
-bool ancestor_descendant_checker(shared_ptr<BST<int>>& r, shared_ptr<BST<int>>& s, shared_ptr<BST<int>>& m){
-	auto cur_r = r, cur_s = s;
-	bool found_m=false;
-	while(cur_r && cur_r!= s && cur_s && cur_s!= r){
-		if(cur_r==m){
-			found_m=true;
-		}else if(cur_s==m){
-			found_m=true;
+string top_score(ifstream* ifs){
+	unordered_map<string,multiset<int>> students_scores;
+	int score;
+	string name;
+	while(*ifs>>name>>score){
+		students_scores[name].emplace(score);
+	}
+	int max_score = 1<<31;
+	string top_stu("there's no such student.");
+	for(auto it : students_scores){
+		if(it.second.size()>=3){
+			int current_sum = find_sum_result(it.second);
+			if(current_sum>max_score){
+				max_score=current_sum;
+				top_stu = it.first;
+			}
 		}
-		cur_r = cur_r->data>s->data?cur_r->left:cur_r->right;
-		cur_s = cur_s->data>r->data?cur_s->left:cur_s->right;
 	}
-	if(cur_r==s||cur_s==r){
-		return false;
-	}
-	return continue_search(cur_r,s,m,found_m) || continue_search(cur_s,r,m,found_m);
+	return top_stu;
 }
-
 
 int main(){
-	shared_ptr<BST<int>> L1 = make_shared<BST<int>>(BST<int>{5,nullptr,nullptr});
-	shared_ptr<BST<int>> L2 = make_shared<BST<int>>(BST<int>{4,nullptr,nullptr});
-	shared_ptr<BST<int>> L3 = make_shared<BST<int>>(BST<int>{7,nullptr,nullptr});
-	shared_ptr<BST<int>> L4 = make_shared<BST<int>>(BST<int>{3,nullptr,nullptr});
-	shared_ptr<BST<int>> L5 = make_shared<BST<int>>(BST<int>{6,nullptr,nullptr});
-	L1->left = L2;
-	L1->right = L3;
-	L2->left = L4;
-	L3->left = L5;
-	cout<<ancestor_descendant_checker(L1,L5,L3);
+	ifstream in("15_17_input");
+	string result = top_score(&in);
+	cout<<result;
 }
