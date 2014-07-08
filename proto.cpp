@@ -1,40 +1,28 @@
-#include <unordered_map>
-#include <unordered_set>
-#include <map>
+#include <stack>
+#include <vector>
 #include <iostream>
+#include <array>
 using namespace std;
+void hanoi_handler(int n,array<stack<int>,3>& pegs,int from,int to,int use);
 
-class CreditClient{
-public:
-	bool insert(string name, int value){
-		if(credits_.emplace(name,value - offset_).second){
-			inverse_credits_[value - offset_].emplace(name);
-			return true;
-		}
-		return false;
+void hanoi(int n){
+	array<stack<int>,3> pegs;
+	for(int i=n;i>0;i--){
+		pegs[0].push(i);
 	}
-	bool remove(string name){
-		auto credit_it = credits_.find(name);
-		if(credit_it!=credits_.end()){
-			inverse_credits_[credit_it->second].erase(name);
-			credits_.erase(credit_it);
-			return true;
-		}
-		return false;
+	hanoi_handler(n,pegs,0,1,2);
+}
+
+void hanoi_handler(int n,array<stack<int>,3>& pegs,int from,int to,int use){
+	if(n>0){
+		hanoi_handler(n-1,pegs,from,use,to);
+		pegs[to].push(pegs[from].top());
+		pegs[from].pop();
+		cout<<"move from "<<from<<" to "<<to<<endl;
+		hanoi_handler(n-1,pegs,use,to,from);
 	}
-	int lookup(string name){
-		auto it = credits_.find(name);
-		return it == credits_.end() ? -1 : it->second+offset_;
-	}
-	void addAll(int c){
-		offset_+=c;
-	}
-	string max_value(){
-		auto it = inverse_credits_.crbegin();
-		return it == inverse_credits_.crend() || it->second.empty() ? "" : *it->second.cbegin();
-	}
-private:
-	unordered_map<string,int> credits_;
-	map<int,unordered_set<string>> inverse_credits_;
-	int offset_=0;
-};
+}
+
+int main(){
+	hanoi(10);
+}
