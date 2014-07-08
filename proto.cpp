@@ -1,28 +1,37 @@
-#include <stack>
-#include <vector>
 #include <iostream>
-#include <array>
+#include <vector>
 using namespace std;
-void hanoi_handler(int n,array<stack<int>,3>& pegs,int from,int to,int use);
 
-void hanoi(int n){
-	array<stack<int>,3> pegs;
-	for(int i=n;i>0;i--){
-		pegs[0].push(i);
+vector<int> vec;
+
+bool checker(int index){
+	for(int i=0;i<index;i++){
+		int diff = abs(vec[index]-vec[i]);
+		if(diff == 0 || diff == index - i){
+			return false;
+		}
 	}
-	hanoi_handler(n,pegs,0,1,2);
+	return true;
 }
 
-void hanoi_handler(int n,array<stack<int>,3>& pegs,int from,int to,int use){
-	if(n>0){
-		hanoi_handler(n-1,pegs,from,use,to);
-		pegs[to].push(pegs[from].top());
-		pegs[from].pop();
-		cout<<"move from "<<from<<" to "<<to<<endl;
-		hanoi_handler(n-1,pegs,use,to,from);
+void n_queen_algorithm(int n, int index){
+	if(n==index){
+		for(int x : vec){
+			cout<<x<<"->";
+		}
+		cout<<endl;
+		return;
+	}
+	for(int i=0;i<n;i++){
+		vec[index]=i;
+		if(checker(index)){
+			n_queen_algorithm(n,index+1);
+		}
 	}
 }
 
 int main(){
-	hanoi(10);
+	int n = 8;
+	vec = vector<int>(n,0);
+	n_queen_algorithm(n,0);
 }
