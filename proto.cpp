@@ -2,32 +2,35 @@
 #include <vector>
 using namespace std;
 
-void combination_handler(int n, int k, int start, vector<int>* ans, vector<vector<int>>* res){
-	if(k==ans->size()){
-		res->emplace_back(*ans);
+
+void paren_handler(int reminder, int left_paren, string* s, vector<string>* res){
+	if(reminder==0){
+		res->emplace_back(*s);
 		return;
 	}
-	if(k - ans->size() <= n - (start+1)){
-		combination_handler(n,k,start+1,ans,res);
+	if(left_paren<reminder){
+		s->push_back('(');
+		paren_handler(reminder-1,left_paren+1,s,res);
+		s->pop_back();
 	}
-	ans->emplace_back(start+1);
-	combination_handler(n,k,start+1,ans,res);
-	ans->pop_back();
+	if(left_paren>0){
+		s->push_back(')');
+		paren_handler(reminder-1,left_paren-1,s,res);
+		s->pop_back();
+	}
 }
 
-vector<vector<int>> combination(int n, int k){
-	vector<int> ans;
-	vector<vector<int>> res;
-	combination_handler(n,k,0,&ans,&res);
+
+vector<string> paren(int n){
+	vector<string> res;
+	string s;
+	paren_handler(n<<1,0,&s,&res);
 	return res;
 }
 
 int main(){
-	auto res = combination(10,2);
+	auto res = paren(5);
 	for(auto x : res){
-		for(auto y: x){
-			cout<<y<<" ";
-		}
-		cout<<endl;
+		cout<<x<<endl;
 	}
 }
