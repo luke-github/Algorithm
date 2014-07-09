@@ -2,36 +2,30 @@
 #include <vector>
 using namespace std;
 
-vector<int> vec;
-
-bool checker(int index){
-	for(int i=0;i<index;i++){
-		int diff = abs(vec[index]-vec[i]);
-		if(diff == 0 || diff == index - i){
-			return false;
-		}
-	}
-	return true;
-}
-
-void n_queen_algorithm(int n, int index){
-	if(n==index){
-		for(int x : vec){
-			cout<<x<<"->";
-		}
-		cout<<endl;
+void permutation_handler(vector<int>* vec,int index,vector<vector<int>>* res){
+	if(index==vec->size()){
+		res->emplace_back(*vec);
 		return;
 	}
-	for(int i=0;i<n;i++){
-		vec[index]=i;
-		if(checker(index)){
-			n_queen_algorithm(n,index+1);
-		}
+	for(int i=index;i<vec->size();i++){
+		swap((*vec)[i],(*vec)[index]);
+		permutation_handler(vec,index+1,res);
+		swap((*vec)[i],(*vec)[index]);
 	}
 }
 
+vector<vector<int>> permutation(vector<int> vec){
+	vector<vector<int>> res;
+	permutation_handler(&vec,0,&res);
+	return res;
+}
 int main(){
-	int n = 8;
-	vec = vector<int>(n,0);
-	n_queen_algorithm(n,0);
+	vector<int> input = {1,2,3,4,5};
+	auto result = permutation(input);
+	for(vector<int> v : result){
+		for(int x : v){
+			cout<<x<<" ";
+		}
+		cout<<endl;
+	}
 }
