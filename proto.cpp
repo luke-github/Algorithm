@@ -1,23 +1,33 @@
 #include <iostream>
-#include <complex>
 #include <vector>
 using namespace std;
 
-void super_set(vector<int>& vec){
-	for(int i=0;i<(1<<vec.size());i++){
-		int x=i;
-		while(x){
-			int m = log2(x&(~(x-1)));
-			cout<<vec[m];
-			if(x&=(x-1)){
-				cout<<",";
-			}
-		}
-		cout<<endl;
+void combination_handler(int n, int k, int start, vector<int>* ans, vector<vector<int>>* res){
+	if(k==ans->size()){
+		res->emplace_back(*ans);
+		return;
 	}
+	if(k - ans->size() <= n - (start+1)){
+		combination_handler(n,k,start+1,ans,res);
+	}
+	ans->emplace_back(start+1);
+	combination_handler(n,k,start+1,ans,res);
+	ans->pop_back();
+}
+
+vector<vector<int>> combination(int n, int k){
+	vector<int> ans;
+	vector<vector<int>> res;
+	combination_handler(n,k,0,&ans,&res);
+	return res;
 }
 
 int main(){
-	vector<int> input = {1,2,3,4};
-	super_set(input);
+	auto res = combination(10,2);
+	for(auto x : res){
+		for(auto y: x){
+			cout<<y<<" ";
+		}
+		cout<<endl;
+	}
 }
