@@ -5,7 +5,7 @@
 #include <numeric>
 using namespace std;
 
-bool remind_result(vector<int> A, int level){
+int remind_result(vector<int> A, int level){
 	int cur = 0;
 	for(int i=level;i<A.size();i++){
 		cur = cur*10 + A[level];
@@ -38,7 +38,7 @@ bool expression_synthesis_handler(vector<int>& A, int k, list<int>* operand_list
 			for(char c : *operator_list){
 				cout<<c<<*it++;
 			}
-			cout<<endl;
+			cout<<"="<<k<<endl;
 			return true;
 		}
 		operand_list->pop_back();
@@ -49,13 +49,13 @@ bool expression_synthesis_handler(vector<int>& A, int k, list<int>* operand_list
 		}
 		// operator +
 		operand_list->emplace_back(cur);
-		// if(k - evaluate_result(*operand_list,*operator_list) <= remind_result(A,level+1)){
+		if(k - evaluate_result(*operand_list,*operator_list) <= remind_result(A,level+1)){
 			operator_list->emplace_back('+');
 			if(expression_synthesis_handler(A,k,operand_list,operator_list,0,level+1)){
 				return true;
 			}
 			operator_list->pop_back();
-		// }
+		}
 		operand_list->pop_back();
 		// operator *
 		operand_list->emplace_back(cur);
@@ -80,6 +80,6 @@ void expression_synthesis(vector<int>& A, int k){
 }
 
 int main(){
-	vector<int> input = {1,2,3,2,5,3,7,8,5,9};
-	expression_synthesis(input,995);
+	vector<int> input = {2,2,5};
+	expression_synthesis(input,9);
 }
