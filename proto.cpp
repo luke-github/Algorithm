@@ -1,73 +1,27 @@
 #include <iostream>
 #include <vector>
-#include <complex>
 using namespace std;
 
-bool is_valid_sudoku(int i,int j, int val, vector<vector<int>>& A){
-	for(int k=0;k<A.size();k++){
-		if(A[i][k]==val||A[k][j]==val){
-			return false;
-		}
+vector<int> gray_code_algorithm(int n){
+	if(n==0){
+		return {0};
 	}
-	int region_size = sqrt(A.size());
-	int row = i/region_size;
-	int col = j/region_size;
-	for(int a=0;a<region_size;a++){
-		for(int b=0;b<region_size;b++){
-			if(A[row*region_size+a][col*region_size+b]==val){
-				return false;
-			}
-		}
+	if(n==1){
+		return {0,1};
 	}
-	return true;
-}
-
-bool sudoku_algorithm_handler(int i,int j,vector<vector<int>>* A){
-	if(i==A->size()){
-		i=0;
-		if(++j==A->size()){
-			return true;
-		}
+	vector<int> pre_res = gray_code_algorithm(n-1);
+	vector<int> res;
+	int heading = 1<<(n-1);
+	for(int i=pre_res.size()-1;i>=0;i--){
+		res.emplace_back(heading+pre_res[i]);
 	}
-	if((*A)[i][j]!=0){
-		return sudoku_algorithm_handler(i+1,j,A);
-	}
-	for(int val=1;val<=A->size();val++){
-		if(is_valid_sudoku(i,j,val,*A)){
-			(*A)[i][j]=val;
-			if(sudoku_algorithm_handler(i+1,j,A)){
-				return true;
-			}
-		}
-	}
-	(*A)[i][j]=0;
-	return false;
-}
-
-void sudoku_algorithm(vector<vector<int>>& vec){
-	if(sudoku_algorithm_handler(0,0,&vec)){
-		cout<<"success"<<endl;
-	}else{
-		cout<<"false"<<endl;
-	}
-		for(int i=0;i<9;i++){
-		if(i%3==0&&i!=0){
-			cout<<"-----------------------"<<endl;
-		}
-		for(int j=0;j<9;j++){
-			cout<<vec[i][j]<<" ";
-			if((j+1)%3==0&&j!=0){
-				cout<<"| ";
-			}
-		}
-		cout<<endl;
-	}
+	pre_res.insert(pre_res.end(),res.begin(),res.end());
+	return pre_res;
 }
 
 int main(){
-		vector<vector<int>> input(9,vector<int>(9,0));
-	// input[1][2]=8;
-	// input[2][3]=3;
-	// cout<<input.size();
-	sudoku_algorithm(input);
+	auto res = gray_code_algorithm(5);
+	for(auto x : res){
+		cout<<x<<" ";
+	}
 }
