@@ -1,45 +1,73 @@
 #include <iostream>
 #include <vector>
+#include <complex>
 using namespace std;
 
-bool is_palidrome(string& s){
-	for(int i=0,j=s.size()-1;i<j;i++,j--){
-		if(s[i]!=s[j]){
+bool is_valid_sudoku(int i,int j, int val, vector<vector<int>>& A){
+	for(int k=0;k<A.size();k++){
+		if(A[i][k]==val||A[k][j]==val){
 			return false;
+		}
+	}
+	int region_size = sqrt(A.size());
+	int row = i/region_size;
+	int col = j/region_size;
+	for(int a=0;a<region_size;a++){
+		for(int b=0;b<region_size;b++){
+			if(A[row*region_size+a][col*region_size+b]==val){
+				return false;
+			}
 		}
 	}
 	return true;
 }
 
-void palidrome_partition_handler(string& s,int start,vector<string>* ans,vector<vector<string>>* result){
-	if(start==s.size()){
-		result->emplace_back(*ans);
-		return;
-	}
-	for(int i=start+1;i<=s.size();i++){
-		string cur = s.substr(start,i-start);
-		if(is_palidrome(cur)){
-			ans->push_back(cur);
-			palidrome_partition_handler(s,i,ans,result);
-			ans->pop_back();
+bool sudoku_algorithm_handler(int i,int j,vector<vector<int>>* A){
+	if(i==A->size()){
+		i=0;
+		if(++j==A->size()){
+			return true;
 		}
 	}
+	if((*A)[i][j]!=0){
+		return sudoku_algorithm_handler(i+1,j,A);
+	}
+	for(int val=1;val<=A->size();val++){
+		if(is_valid_sudoku(i,j,val,*A)){
+			(*A)[i][j]=val;
+			if(sudoku_algorithm_handler(i+1,j,A)){
+				return true;
+			}
+		}
+	}
+	(*A)[i][j]=0;
+	return false;
 }
 
-vector<vector<string>> palidrome_partition(string& s){
-	vector<vector<string>> result;
-	vector<string> ans;
-	palidrome_partition_handler(s,0,&ans,&result);
-	return result;
-}
-
-int main(){
-		string input ="aba";
-	auto res = palidrome_partition(input);
-	for(auto x:res){
-		for(auto y : x){
-			cout<<y<<",";
+void sudoku_algorithm(vector<vector<int>>& vec){
+	if(sudoku_algorithm_handler(0,0,&vec)){
+		cout<<"success"<<endl;
+	}else{
+		cout<<"false"<<endl;
+	}
+		for(int i=0;i<9;i++){
+		if(i%3==0&&i!=0){
+			cout<<"-----------------------"<<endl;
+		}
+		for(int j=0;j<9;j++){
+			cout<<vec[i][j]<<" ";
+			if((j+1)%3==0&&j!=0){
+				cout<<"| ";
+			}
 		}
 		cout<<endl;
 	}
+}
+
+int main(){
+		vector<vector<int>> input(9,vector<int>(9,0));
+	// input[1][2]=8;
+	// input[2][3]=3;
+	// cout<<input.size();
+	sudoku_algorithm(input);
 }
