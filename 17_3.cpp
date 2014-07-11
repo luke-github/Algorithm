@@ -38,5 +38,5 @@ int BC_algorithm_2(int n, int k){
 
 int main(){
 	// cout<<BC_algorithm(5,2)<<endl;
-	cout<<BC_algorithm_2(10,6);
+	cout<<BC_algorithm_2(4,2);
 }
