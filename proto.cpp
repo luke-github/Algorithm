@@ -2,26 +2,28 @@
 #include <vector>
 using namespace std;
 
-int ways_algorithm_with_obstacle(int m, int n, vector<vector<int>>& vec){
-	vector<vector<int>> dp(m,vector<int>(n,0));
-	if(vec[0][0]){
-		return 0;
-	}
-	dp[0][0]=1;
-	for(int i=0;i<m;i++){
-		for(int j=0;j<n;j++){
-			if(vec[i][j]==0){
-				dp[i][j] += (i<1?0:dp[i-1][j])+(j<1?0:dp[i][j-1]);
-				cout<<dp[i][j]<<" ";
-			}
+int max_collection_algorithm(vector<vector<int>> vec){
+	for(int i=0;i<vec.size();i++){
+		for(int j=0;j<vec[i].size();j++){
+			vec[i][j] += max((i<1?0:vec[i-1][j]),(j<1?0:vec[i][j-1]));
 		}
-		cout<<endl;
 	}
-	return dp[m-1][n-1];
+	return vec.back().back();
 }
 
 int main(){
-	vector<vector<int>> input(10,vector<int>(10,0));
-	input[2][1]=1;
-	cout<<ways_algorithm_with_obstacle(10,10,input)<<endl;
+	vector<vector<int>> input(3,vector<int>(3,0));
+	input[1][1]=3;
+	input[1][0]=6;
+	input[2][0]=9;
+	input[0][2]=16;
+	for(auto x : input){
+		for(auto y: x){
+			cout<<y<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<max_collection_algorithm(input)<<endl;
+
+
 }
