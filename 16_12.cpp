@@ -81,5 +81,5 @@ void expression_synthesis(vector<int>& A, int k){
 
 int main(){
 	vector<int> input = {2,2,5};
-	expression_synthesis(input,9);
+	expression_synthesis(input,);
 }
