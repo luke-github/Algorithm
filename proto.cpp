@@ -23,5 +23,5 @@ int ways_algorithm_with_obstacle(int m, int n, vector<vector<int>>& vec){
 int main(){
 	vector<vector<int>> input(10,vector<int>(10,0));
 	input[2][1]=1;
-	cout<<ways_algorithm_with_obstacle(10,10,input);
+	cout<<ways_algorithm_with_obstacle(10,10,input)<<endl;
 }
