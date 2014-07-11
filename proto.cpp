@@ -1,87 +1,33 @@
 #include <iostream>
 #include <vector>
-#include <list>
-#include <vector>
-#include <numeric>
 using namespace std;
 
-int evaluate_result(list<int> operand_list, list<char> operator_list){
-	auto it = operand_list.begin();
-	for(char c : operator_list){
-		if(c=='*'){
-			int result = *it;
-			it = operand_list.erase(it);
-			result *= *it;
-			*it = result;
-		}else{
-			it++;
-		}
-	}
-	return accumulate(operand_list.begin(),operand_list.end(),0);
+int min_result(int a, int b, int c){
+	return min(a, min(b,c));
 }
 
-int remind_result(vector<int>& A, int level){
-	int result = 0;
-	for(int i=level;i<A.size();i++){
-		result = result*10 + A[level];
+int distance_algorithm(string a,string b){
+	int dp[a.size()+1][b.size()+1];
+	for(int i=0;i<=a.size();i++){
+		dp[i][0]=i;
 	}
-	return result;
-}
-
-bool expression_synthesis_handler(vector<int>& A, int k, list<int>* operand_list, list<char>* operator_list, int cur, int level){
-	cur = cur*10 + A[level];
-	if(level==A.size()-1){
-		operand_list->emplace_back(cur);
-		if(evaluate_result(*operand_list,*operator_list)){
-			auto it = operand_list->begin();
-			cout<<*it++;
-			for(char c : *operator_list){
-				cout<<c<<*it++;
+	for(int j=0;j<=b.size();j++){
+		dp[0][j]=j;
+	}
+	for(int i=1;i<=a.size();i++){
+		for(int j=1;j<=b.size();j++){
+			if(a[i-1]==b[j-1]){
+				dp[i][j]=dp[i-1][j-1];
+			}else{
+				dp[i][j]=1+min_result(dp[i-1][j-1],dp[i][j-1],dp[i-1][j]);
 			}
-			cout<<endl;
-			return true;
 		}
-		operand_list->pop_back();
-	}else{
-		// no operator
-		if(expression_synthesis_handler(A,k,operand_list,operator_list,cur,level+1)){
-			return true;
-		}
-		// operator +
-		operand_list->emplace_back(cur);
-		if(k - evaluate_result(*operand_list,*operator_list) <= remind_result(A,level+1)){
-			operator_list->emplace_back('+');
-			if(expression_synthesis_handler(A,k,operand_list,operator_list,0,level+1)){
-				return true;
-			}
-			operator_list->pop_back();
-		}
-		operand_list->pop_back();
-		// operator *
-		operand_list->emplace_back(cur);
-		operator_list->emplace_back('*');
-		if(expression_synthesis_handler(A,k,operand_list,operator_list,0,level+1)){
-			return true;
-		}
-		operand_list->pop_back();
-		operator_list->pop_back();
 	}
-	return false;
+	return dp[a.size()][b.size()];
 }
-
-void expression_synthesis(vector<int>& A, int k){
-	list<int> operand_list;
-	list<char> operator_list;
-	if(expression_synthesis_handler(A,k,&operand_list,&operator_list,0,0)){
-		cout<<"success"<<endl;
-	}else{
-		cout<<"no solution"<<endl;
-	}
-}
-
-
 
 int main(){
-	vector<int> input = {2,2,5};
-	expression_synthesis(input,3);
+	string a = "abc";
+	string b = "b";
+	cout<<distance_algorithm(a,b);
 }
