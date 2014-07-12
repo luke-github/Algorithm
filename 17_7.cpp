@@ -14,7 +14,7 @@ int knapsack_algorithm(vector<item>& vec, int k){
 			if(i==0){
 				res[i][j]=0;
 			}else{
-				if(vec[i].weight>j){
+				if(vec[i-1].weight>j){
 					res[i][j]=res[i-1][j];
 				}else{
 					res[i][j]=max(res[i-1][j],res[i-1][j-vec[i-1].weight]+vec[i-1].value);
