@@ -1,27 +1,29 @@
 #include <iostream>
 #include <vector>
+#include <unordered_set>
 #include <numeric>
 using namespace std;
 
-int subsum_algorithm(vector<int>& vec, int target){
+int minimal_difference(vector<int>& vec){
 	int total = accumulate(vec.begin(),vec.end(),0);
-	vector<vector<int>> dp(vec.size()+1,vector<int>(total+1,0));
-	dp[0][0]=1;
-	for(int i=0;i<vec.size();i++){
-		for(int j=0;j<=total;j++){
-			dp[i+1][j]=dp[i][j]+(j<vec[i]?0:dp[i][j-vec[i]]);
+	unordered_set<int> dp;
+	dp.emplace(0);
+	for(int x : vec){
+		for(int i=total>>1;i>=x;i--){
+			if(dp.find(i-x)!=dp.end()){
+				dp.emplace(i);
+			}
 		}
 	}
-	for(auto x: dp){
-		for(auto y:x){
-			cout<<y<<" ";
+	for(int i=total>>1;i>=0;i--){
+		if(dp.find(i)!=dp.end()){
+			return total-i-i;
 		}
-		cout<<endl;
 	}
-	return dp[vec.size()][target];
+	return total;
 }
 
 int main(){
-	vector<int> input = {1,3,2,4};
-	cout<<subsum_algorithm(input,4);
+	vector<int> input = {1,2,3,5};
+	cout<<minimal_difference(input);
 }
