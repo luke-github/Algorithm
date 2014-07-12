@@ -1,34 +1,27 @@
 #include <iostream>
 #include <vector>
+#include <numeric>
 using namespace std;
 
-struct item{
-	int weight;
-	int value;
-};
-
-int knapsack_algorithm(vector<item>& vec, int k){
-	int res[vec.size()+1][k+1];
-	for(int i=0;i<=vec.size();i++){
-		for(int j=0;j<=k;j++){
-			if(i==0){
-				res[i][j]=0;
-			}else{
-				if(vec[i-1].weight>j){
-					res[i][j]=res[i-1][j];
-				}else{
-					res[i][j]=max(res[i-1][j],res[i-1][j-vec[i-1].weight]+vec[i-1].value);
-				}
-			}
+int subsum_algorithm(vector<int>& vec, int target){
+	int total = accumulate(vec.begin(),vec.end(),0);
+	vector<vector<int>> dp(vec.size()+1,vector<int>(total+1,0));
+	dp[0][0]=1;
+	for(int i=0;i<vec.size();i++){
+		for(int j=0;j<=total;j++){
+			dp[i+1][j]=dp[i][j]+(j<vec[i]?0:dp[i][j-vec[i]]);
 		}
 	}
-	return res[vec.size()][k];
+	for(auto x: dp){
+		for(auto y:x){
+			cout<<y<<" ";
+		}
+		cout<<endl;
+	}
+	return dp[vec.size()][target];
 }
 
 int main(){
-	vector<item> input = {{4,3},
-						{2,4},
-						{1,6},
-						{5,7}};
-	cout<<knapsack_algorithm(input,6);
+	vector<int> input = {1,3,2,4};
+	cout<<subsum_algorithm(input,4);
 }
