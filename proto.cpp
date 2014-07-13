@@ -1,29 +1,38 @@
 #include <iostream>
 #include <vector>
 #include <unordered_set>
-#include <numeric>
 using namespace std;
 
-int minimal_difference(vector<int>& vec){
-	int total = accumulate(vec.begin(),vec.end(),0);
-	unordered_set<int> dp;
-	dp.emplace(0);
-	for(int x : vec){
-		for(int i=total>>1;i>=x;i--){
-			if(dp.find(i-x)!=dp.end()){
-				dp.emplace(i);
+vector<string> word_breaking(unordered_set<string>& dict, string& s){
+	vector<string> res;
+	vector<int> dp(s.size(),0);
+	for(int i=0;i<s.size();i++){
+		if(dict.find(s.substr(0,i+1))!=dict.end()){
+			dp[i]=i+1;
+		}
+		for(int j=0;j<i&&dp[i]==0;j++){
+			if(dp[j]!=0&&dict.find(s.substr(j+1,i-j))!=dict.end()){
+				dp[i] = i-j;
 			}
 		}
 	}
-	for(int i=total>>1;i>=0;i--){
-		if(dp.find(i)!=dp.end()){
-			return total-i-i;
+	int index = s.size()-1;
+	if(dp.back()){
+		while(index>=0){
+			res.emplace_back(s.substr(index - dp[index] + 1, dp[index]));
+			index = index - dp[index];
 		}
 	}
-	return total;
+	reverse(res.begin(),res.end());
+	return res;
 }
 
+
 int main(){
-	vector<int> input = {1,2,3,5};
-	cout<<minimal_difference(input);
+	unordered_set<string> dic = {"ab","cd","ac","bcc","m"};
+	string s = "ababacm";
+	auto result = word_breaking(dic,s);
+	for(auto x : result){
+		cout<<x<<" ";
+	}
 }
