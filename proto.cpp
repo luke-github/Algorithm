@@ -1,38 +1,25 @@
 #include <iostream>
 #include <vector>
-#include <unordered_set>
 using namespace std;
 
-vector<string> word_breaking(unordered_set<string>& dict, string& s){
-	vector<string> res;
-	vector<int> dp(s.size(),0);
-	for(int i=0;i<s.size();i++){
-		if(dict.find(s.substr(0,i+1))!=dict.end()){
-			dp[i]=i+1;
+int minimal_weight(vector<vector<int>>& vec){
+	vector<int> pre_row(vec.front());
+	for(int i=1;i<vec.size();i++){
+		vector<int> cur_row(vec[i]);
+		cur_row.front()+=pre_row.front();
+		for(int j=1;j<cur_row.size()-1;j++){
+			cur_row[j]+=min(pre_row[j-1],pre_row[j]);
 		}
-		for(int j=0;j<i&&dp[i]==0;j++){
-			if(dp[j]!=0&&dict.find(s.substr(j+1,i-j))!=dict.end()){
-				dp[i] = i-j;
-			}
-		}
+		cur_row.back()+=pre_row.back();
+		pre_row.swap(cur_row);
 	}
-	int index = s.size()-1;
-	if(dp.back()){
-		while(index>=0){
-			res.emplace_back(s.substr(index - dp[index] + 1, dp[index]));
-			index = index - dp[index];
-		}
-	}
-	reverse(res.begin(),res.end());
-	return res;
+	return *min_element(pre_row.begin(),pre_row.end());
 }
 
-
 int main(){
-	unordered_set<string> dic = {"ab","cd","ac","bcc","m"};
-	string s = "ababacm";
-	auto result = word_breaking(dic,s);
-	for(auto x : result){
-		cout<<x<<" ";
-	}
+	vector<vector<int>> input = {{1},
+								{2,1},
+								{5,3,1},
+								{3,7,1,4}};
+	cout<<minimal_weight(input);
 }
