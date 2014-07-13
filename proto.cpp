@@ -2,24 +2,23 @@
 #include <vector>
 using namespace std;
 
-int minimal_weight(vector<vector<int>>& vec){
-	vector<int> pre_row(vec.front());
-	for(int i=1;i<vec.size();i++){
-		vector<int> cur_row(vec[i]);
-		cur_row.front()+=pre_row.front();
-		for(int j=1;j<cur_row.size()-1;j++){
-			cur_row[j]+=min(pre_row[j-1],pre_row[j]);
-		}
-		cur_row.back()+=pre_row.back();
-		pre_row.swap(cur_row);
+int max_profit_algorithm_handler(vector<int>& vec, int a, int b, vector<vector<int>>* dp){
+	if(a>b){
+		return 0;
 	}
-	return *min_element(pre_row.begin(),pre_row.end());
+	if((*dp)[a][b]==-1){
+		(*dp)[a][b]=max(vec[a]+min(max_profit_algorithm_handler(vec,a+1,b-1,dp),max_profit_algorithm_handler(vec,a+1,b,dp)),
+			vec[b]+min(max_profit_algorithm_handler(vec,a+1,b-1,dp),max_profit_algorithm_handler(vec,a,b-2,dp)));
+	}
+	return (*dp)[a][b];
+}
+
+int max_profit_algorithm(vector<int>& vec){
+	vector<vector<int>> dp(vec.size(),vector<int>(vec.size(),-1));
+	return max_profit_algorithm_handler(vec,0,vec.size()-1,&dp);
 }
 
 int main(){
-	vector<vector<int>> input = {{1},
-								{2,1},
-								{5,3,1},
-								{3,7,1,4}};
-	cout<<minimal_weight(input);
+	vector<int> input = {1,2,3,4,5,6};
+	cout<<max_profit_algorithm(input);
 }
