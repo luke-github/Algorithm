@@ -1,3 +1,6 @@
+// this is one very straightforward solution. When you can write down the transform formular, you can write the solution out.
+
+
 #include <iostream>
 #include <vector>
 using namespace std;
