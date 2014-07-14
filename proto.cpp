@@ -1,24 +1,25 @@
 #include <iostream>
 #include <vector>
+#include <numeric>
 using namespace std;
 
-int max_profit_algorithm_handler(vector<int>& vec, int a, int b, vector<vector<int>>* dp){
-	if(a>b){
-		return 0;
+int ways_parlidrom_algorithm(string& s){
+	vector<vector<bool>> checker(s.size(),vector<bool>(s.size(),false));
+	vector<int> dp(s.size()+1);
+	iota(dp.rbegin(),dp.rend(),0);
+	for(int i=s.size()-1;i>=0;i--){
+		for(int j=i;j<s.size();j++){
+			if(s[i]==s[j]&&(j-i<2||checker[i+1][j-1])){
+				checker[i][j]=true;
+				dp[i] = min(dp[i],1+dp[j+1]);
+			}
+		}
 	}
-	if((*dp)[a][b]==-1){
-		(*dp)[a][b]=max(vec[a]+min(max_profit_algorithm_handler(vec,a+1,b-1,dp),max_profit_algorithm_handler(vec,a+1,b,dp)),
-			vec[b]+min(max_profit_algorithm_handler(vec,a+1,b-1,dp),max_profit_algorithm_handler(vec,a,b-2,dp)));
-	}
-	return (*dp)[a][b];
+	return dp[0];
 }
 
-int max_profit_algorithm(vector<int>& vec){
-	vector<vector<int>> dp(vec.size(),vector<int>(vec.size(),-1));
-	return max_profit_algorithm_handler(vec,0,vec.size()-1,&dp);
-}
 
 int main(){
-	vector<int> input = {1,2,3,4,5,6};
-	cout<<max_profit_algorithm(input);
+	string input = "acad";
+	cout<<ways_parlidrom_algorithm(input);
 }
