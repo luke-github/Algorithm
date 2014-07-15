@@ -2,36 +2,69 @@
 #include <vector>
 using namespace std;
 
-void flip_algorithm(vector<vector<bool>>* vec, int x, int y){
-	bool color = (*vec)[x][y];
-	(*vec)[x][y] = !(*vec)[x][y];
-	int shift[4][2] = {{0,1},{0,-1},{1,0},{-1,0}};
-	for(auto m : shift){
-		int nx = x+m[0],ny=y+m[1];
-		if(nx>=0 && nx<vec->size() && ny>=0 && ny<(*vec)[nx].size() && (*vec)[nx][ny]==color){
-			flip_algorithm(vec,nx,ny);
+void surrounded_algorithm_handler(int i, int j,vector<vector<char>>* board,vector<vector<bool>>* visited){
+	(*visited)[i][j]=true;
+	bool is_surrounded=true;
+	vector<pair<int,int>> q;
+	q.emplace_back(i,j);
+	int index=0;
+	int shift[4][2]={{1,0},{-1,0},{0,1},{0,-1}};
+	while(index<q.size()){
+		pair<int,int> cur = q[index++];
+		if(cur.first==0 || cur.second==board->size()-1 || cur.second==0 || cur.second==board->front().size()-1){
+			is_surrounded=false;
+		}else{
+			for(auto m : shift){
+				pair<int,int> next(i+m[0],j+m[1]);
+				if(!(*visited)[next.first][next.second] && (*board)[next.first][next.second]=='w'){
+					(*visited)[next.first][next.second]=true;
+					q.emplace_back(next);
+				}
+			}
+		}
+	}
+	if(is_surrounded){
+		for(auto p : q){
+			(*board)[p.first][p.second]='b';
 		}
 	}
 }
 
+void surrounded_algorithm(vector<vector<char>>* board){
+	if(board->empty()){
+		return;
+	}
+	vector<vector<bool>> visited(board->size(),vector<bool>(board->front().size(),false));
+	for(int i=1;i<board->size()-1;i++){
+		for(int j=1;j<board->front().size()-1;j++){
+			if(!visited[i][j] && (*board)[i][j]=='w'){
+				surrounded_algorithm_handler(i,j,board,&visited);
+			}
+		}
+	}
+}
+
+void pint_result(vector<vector<char>>& vec){
+	for(auto x: vec){
+		for(auto y: x){
+			cout<<y<<" ";
+		}
+		cout<<endl;
+	}
+}
+
 int main(){
-	vector<vector<bool>> input(5,vector<bool>(5,0));
-	input[0][1]=1;
-	input[0][0]=1;
-	input[1][0]=1;
-	input[1][1]=1;
-	for(auto x: input){
-		for(auto y : x){
-			cout<<y<<" ";
-		}
-		cout<<endl;
-	}
+	vector<vector<char>> input(5,vector<char>(5,'b'));
+	input[1][1]='w';
+	input[1][2]='w';
+	input[2][1]='w';
+	input[2][2]='w';
+	input[0][1]='w';
+	// input[1][3]='w';
+	pint_result(input);
 	cout<<endl;
-	flip_algorithm(&input,3,3);
-		for(auto x: input){
-		for(auto y : x){
-			cout<<y<<" ";
-		}
-		cout<<endl;
-	}
+	surrounded_algorithm(&input);
+	pint_result(input);
+
+
 }
