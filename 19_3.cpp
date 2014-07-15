@@ -8,6 +8,7 @@ void fill_surrounded_algorithm_handler(int i, int j, vector<vector<char>>* board
 	vector<pair<int,int>> q;
 	int index=0;
 	q.emplace_back(i,j);
+	(*visited)[i][j]=true;
 	while(index<q.size()){
 		pair<int,int> cur = q[index++];
 		if(cur.first==0 || cur.first==board->size()-1 || cur.second==0 || cur.second==board->front().size()-1){
@@ -35,7 +36,7 @@ void fill_surrounded_algorithm(vector<vector<char>>* board){
 	}
 	vector<vector<bool>> visited(board->size(),vector<bool>(board->front().size(),false));
 	for(int i=1;i<board->size()-1;i++){
-		for(int j=1;j<board->size()-1;j++){
+		for(int j=1;j<board->front().size()-1;j++){
 			if(!visited[i][j] && (*board)[i][j]=='w'){
 				fill_surrounded_algorithm_handler(i,j,board,&visited);
 			}
@@ -59,6 +60,7 @@ int main(){
 	input[2][1]='w';
 	input[2][2]='w';
 	input[0][1]='w';
+	// input[1][3]='w';
 	pint_result(input);
 	cout<<endl;
 	fill_surrounded_algorithm(&input);
