@@ -20,6 +20,6 @@ int max_trapped_algorithm(vector<int>& vec){
 }
 
 int main(){
-		vector<int> input={1,6,3,8,5,7,3,9};
+	vector<int> input={1,6,3,8,5,7,3,9};
 	cout<<max_trapped_algorithm(input);
 }
