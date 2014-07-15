@@ -1,19 +1,26 @@
 #include <iostream>
-#include <vector>
+#include <sstream>
 using namespace std;
 
-int gasup_algorithm(vector<int>& G, vector<int>& D){
-	int carry = 0;
-	pair<int,int> res={0,0};
-	for(int i=1;i<G.size();i++){
-		carry += G[i-1]-D[i-1];
-		if(carry<res.second){
-			res={i,carry};
+string majority_algorithm(istringstream* in){
+	string buf,res;
+	int count = 0;
+	while(*in>>buf){
+		if(count==0){
+			res = buf;
+			count++;
+		}else if(res==buf){
+			count++;
+		}else{
+			count--;
 		}
 	}
-	return res.first;
+	return res;
 }
 
+
 int main(){
-	
+	string str = "a b a a b c a a a";
+	istringstream is(str);
+	cout<<majority_algorithm(&is);
 }
