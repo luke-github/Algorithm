@@ -1,70 +1,32 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <unordered_map>
 using namespace std;
 
-void surrounded_algorithm_handler(int i, int j,vector<vector<char>>* board,vector<vector<bool>>* visited){
-	(*visited)[i][j]=true;
-	bool is_surrounded=true;
-	vector<pair<int,int>> q;
-	q.emplace_back(i,j);
-	int index=0;
-	int shift[4][2]={{1,0},{-1,0},{0,1},{0,-1}};
-	while(index<q.size()){
-		pair<int,int> cur = q[index++];
-		if(cur.first==0 || cur.second==board->size()-1 || cur.second==0 || cur.second==board->front().size()-1){
-			is_surrounded=false;
-		}else{
-			for(auto m : shift){
-				pair<int,int> next(i+m[0],j+m[1]);
-				if(!(*visited)[next.first][next.second] && (*board)[next.first][next.second]=='w'){
-					(*visited)[next.first][next.second]=true;
-					q.emplace_back(next);
-				}
+struct Node{
+	int value;
+	vector<Node*> edges;
+};
+
+Node* clone_graph(Node* G){
+	if(!G){
+		return nullptr;
+	}
+	unordered_map<Node*,Node*> hash;
+	queue<Node*> q;
+	hash.emplace(G,new Node({G->value}));
+	q.emplace(G);
+	while(!q.empty()){
+		Node* cur = q.front();
+		q.pop();
+		for(auto x : cur->edges){
+			if(hash.find(x)==hash.end()){
+				hash.emplace(x,new Node({x->value}));
+				q.emplace(x);
 			}
+			hash[cur]->edges.emplace_back(hash[x]);
 		}
 	}
-	if(is_surrounded){
-		for(auto p : q){
-			(*board)[p.first][p.second]='b';
-		}
-	}
-}
-
-void surrounded_algorithm(vector<vector<char>>* board){
-	if(board->empty()){
-		return;
-	}
-	vector<vector<bool>> visited(board->size(),vector<bool>(board->front().size(),false));
-	for(int i=1;i<board->size()-1;i++){
-		for(int j=1;j<board->front().size()-1;j++){
-			if(!visited[i][j] && (*board)[i][j]=='w'){
-				surrounded_algorithm_handler(i,j,board,&visited);
-			}
-		}
-	}
-}
-
-void pint_result(vector<vector<char>>& vec){
-	for(auto x: vec){
-		for(auto y: x){
-			cout<<y<<" ";
-		}
-		cout<<endl;
-	}
-}
-
-int main(){
-	vector<vector<char>> input(5,vector<char>(5,'b'));
-	input[1][1]='w';
-	input[1][2]='w';
-	input[2][1]='w';
-	input[2][2]='w';
-	input[0][1]='w';
-	// input[1][3]='w';
-	pint_result(input);
-	cout<<endl;
-	surrounded_algorithm(&input);
-	pint_result(input);
-
-
+	return hash[G];
 }
