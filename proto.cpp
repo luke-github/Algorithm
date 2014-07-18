@@ -37,4 +37,4 @@ bool is_feasible(vector<GraphVertex>* G){
 		}
 	}
 	return true;
-}
+} 
