@@ -26,7 +26,8 @@ bool BSF_search(GraphVertex* s){
 	}
 	return true;
 }
-
+ 
+ 
 bool is_feasible(vector<GraphVertex>* G){
 	for(GraphVertex s : *G){
 		if(s.d==-1){
