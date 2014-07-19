@@ -1,41 +1,29 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-using namespace std;
-
-struct GraphVertex{
-	int d = -1;
-	vector<GraphVertex*> edges;
-};
-
-bool BSF_search(GraphVertex* s){
-	queue<GraphVertex*> q;
-	q.emplace(s);
-	while(!q.empty()){
-		for(GraphVertex* m : q.front()->edges){
-			if(m->d==-1){
-				m->d = q.front()->d +1;
-				q.emplace(m);
-			}else{
-				if(m->d==q.front()->d){
-					return false;
-				}
-			}
+ public class oddMonitor{
+	public static final boolean odd_turn = true;
+	public static final boolean even_turn = false;
+	private boolean turn = odd_turn;
+	public synchronized void waitTurn(boolean oldturn) throws InterruptedException{
+		while(turn!=oldturn){
+			wait();
 		}
-		q.pop();
 	}
-	return true;
+	public synchronized void toggleTurn(){
+		turn ^= true;
+		notify();
+	}
 }
- 
- 
-bool is_feasible(vector<GraphVertex>* G){
-	for(GraphVertex s : *G){
-		if(s.d==-1){
-			s.d=0;
-			if(!BSF_search(&s)){
-				return false;
-			}
+
+class oddThread extends Thread{
+	public final oddMonitor monitor;
+	public oddThread(oddMonitor monitor){
+		this.monitor = monitor;
+	}
+	@Override
+	public void run(){
+		for(int i=1;i<100;i=i+2){
+			monitor.waitTurn(oddMonitor.odd_turn);
+			System.out.println(i);
+			monitor.toggleTurn();
 		}
 	}
-	return true;
-} 
+}
