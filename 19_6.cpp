@@ -38,3 +38,6 @@ bool is_feasible(vector<Vertex>* G){
 	}
 	return true;
 }
+int main(){
+	cout<<"hi";
+}
