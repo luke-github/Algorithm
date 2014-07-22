@@ -1,29 +1,31 @@
- public class oddMonitor{
-	public static final boolean odd_turn = true;
-	public static final boolean even_turn = false;
-	private boolean turn = odd_turn;
-	public synchronized void waitTurn(boolean oldturn) throws InterruptedException{
-		while(turn!=oldturn){
-			wait();
-		}
+#include <iostream>
+using namespace std;
+
+unsigned add_algorithm(unsigned a, unsigned b){
+	unsigned sum=0,temp_a=a,temp_b=b,k=1,carryin=0;
+	while(temp_a||temp_b){
+		unsigned ak=a&k, bk=b&k;
+		unsigned carryout = (ak&bk) | (ak&carryin) | (bk&carryin);
+		sum |= ak^bk^carryin;
+		carryin = carryout<<1;
+		k<<=1;
+		temp_a>>=1;
+		temp_b>>=1;
 	}
-	public synchronized void toggleTurn(){
-		turn ^= true;
-		notify();
-	}
+	return sum|carryin;
 }
 
-class oddThread extends Thread{
-	public final oddMonitor monitor;
-	public oddThread(oddMonitor monitor){
-		this.monitor = monitor;
-	}
-	@Override
-	public void run(){
-		for(int i=1;i<100;i=i+2){
-			monitor.waitTurn(oddMonitor.odd_turn);
-			System.out.println(i);
-			monitor.toggleTurn();
+unsigned multiple_algorithm(unsigned x, unsigned y){
+	unsigned sum = 0;
+	while(x){
+		if(x&1){
+			sum = add_algorithm(sum,y);
 		}
+		x>>=1;
+		y<<=1;
 	}
+	return sum;
+}
+int main(){
+	cout<<multiple_algorithm(300,1234);
 }
