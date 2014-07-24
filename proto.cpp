@@ -1,25 +1,17 @@
-#include <complex>
 #include <iostream>
 using namespace std;
 
-bool checker_parlidrome(int x){
-	if(x<0){
-		return false;
-	}
-	int num_digits = floor(log10(x))+1;
-	int temp_x = x;
-	int shift = pow(10,num_digits-1);
-	for(int i=0;i<(num_digits>>1);i++){
-		if(x/shift != temp_x%10){
-			return false;
+int random_generator(int a, int b){
+	int t = abs(a-b)+1;
+	int res;
+	do{
+		res = 0;
+		for(int i=0;(1<<i)<t;i++){
+			res = res<<1 | zero_one_random();
 		}
-		x %= shift;
-		shift /=10;
-		temp_x /=10;
-	}
-	return true;
+	}while(res >= t);
+	return res + a;
 }
-
 int main(){
-	cout<<checker_parlidrome(1333333331);
+
 }
