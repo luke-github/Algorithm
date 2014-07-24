@@ -1,16 +1,15 @@
 #include <iostream>
 using namespace std;
 
-int spreadsheet_algorithm(const string& s){
+int reverse_algorithm(int n){
 	int res = 0;
-	for(char x : s){
-		res *= 26;
-		res += x-'A'+1;
+	while(n){
+		res =  res*10 + n%10;
+		n /=10;
 	}
 	return res;
 }
 
 int main(){
-	string input = "AA";
-	cout<<spreadsheet_algorithm(input);
+	cout<<reverse_algorithm(12345);
 }
