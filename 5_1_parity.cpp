@@ -10,6 +10,6 @@ bool parity_algorithm(int x){
 	return result;
 }
 
-int main(){
+int main(){ 
 	cout<<parity_algorithm(4);
 }
