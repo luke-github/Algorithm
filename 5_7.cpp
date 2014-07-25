@@ -18,4 +18,4 @@ double pow_algorithm(double x, int y){
 }
 int main(){
 	cout<<pow_algorithm(2,-5);
-}
+} 
