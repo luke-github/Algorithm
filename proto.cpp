@@ -1,17 +1,25 @@
 #include <iostream>
 using namespace std;
 
-int random_generator(int a, int b){
-	int t = abs(a-b)+1;
-	int res;
-	do{
-		res = 0;
-		for(int i=0;(1<<i)<t;i++){
-			res = res<<1 | zero_one_random();
-		}
-	}while(res >= t);
-	return res + a;
+struct Rectangle{
+	int x,y,width,height;
+};
+
+bool is_intersect(Rectangle R, Rectangle S){
+	return R.x+R.width>=S.x && R.x<=S.x+S.width && R.y+R.height>=S.y && R.y<=S.y+S.height;
 }
+
+Rectangle intersection_algorithm(Rectangle& R, Rectangle& S){
+	if(is_intersect(R,S)){
+		return {max(R.x,S.x),max(R.y,S.y),min(R.x+R.width,S.x+S.width)-max(R.x,S.x),min(R.y+R.height,S.y+S.height)-max(R.y,S.y)};
+	}else{
+		return {0,0,-1,-1};
+	}
+}
+
 int main(){
+	Rectangle r1 = {1,1,5,5}, r2 = {2,2,5,5};
+	auto res = intersection_algorithm(r1,r2);
+	cout<<res.x<<" "<<res.y<<" "<<res.width<<" "<<res.height<<endl;
 
 }
