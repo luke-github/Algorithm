@@ -1,13 +1,16 @@
-#include <complex>
 #include <iostream>
 using namespace std;
 
-bool perfect_square_checker(int x){
-	double square_x = sqrt(x);
-	int floor_x = floor(square_x);
-	return x==floor_x*floor_x;	
+unsigned long minimal_bits(unsigned long x){
+	for(int i=0;i<63;i++){
+		if((x>>i)&1^((x>>(i+1))&1)){
+			x ^= 1<<i | 1<<(i+1);
+			return x;
+		}
+	}
+	throw invalid_argument("invalid");
 }
 
 int main(){
-	cout<<perfect_square_checker(25);
+	cout<<minimal_bits(3);
 }
