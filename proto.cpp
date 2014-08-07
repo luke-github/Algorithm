@@ -1,16 +1,19 @@
 #include <iostream>
 using namespace std;
 
-unsigned long minimal_bits(unsigned long x){
-	for(int i=0;i<63;i++){
-		if((x>>i)&1^((x>>(i+1))&1)){
-			x ^= 1<<i | 1<<(i+1);
-			return x;
+int divide_func(int x, int y){
+	int res = 0;
+	while(x>=y){
+		int power = 1;
+		while((y<<power)>=(y<<(power-1))&&(y<<power<=x)){
+			power++;
 		}
+		res += 1<<(power-1);
+		x -= y<<(power-1);
 	}
-	throw invalid_argument("invalid");
+	return res;
 }
 
 int main(){
-	cout<<minimal_bits(3);
+	cout<<divide_func(8,3);
 }
