@@ -1,28 +1,34 @@
 #include <iostream>
-#include <numeric>
 #include <vector>
 using namespace std;
 
-int max_product_fun(const vector<int>& vec){
-	vector<int> L,R(vec.size());
-	partial_sum(vec.cbegin(),vec.cend(),back_inserter(L),multiplies<int>());
-	partial_sum(vec.crbegin(),vec.crend(),R.rbegin(),multiplies<int>());
-	int max_val = 1<<31;
-	for(int i=0;i<vec.size();i++){
-		int forward = i>0?L[i-1]:1;
-		int backward = i+1<vec.size()?R[i+1]:1;
-		max_val = max(max_val,forward*backward);
+pair<int,int> longest_increasing_array(const vector<int>& vec){
+	int max_len = 1;
+	int i = 0;
+	pair<int,int> ans(0,0);
+	while(i<vec.size()){
+		bool is_skip = false;
+		for(int j = i+max_len-1;j>=i;j--){
+			if(j+1>vec.size()||vec[j]>vec[j+1]){
+				i=j+1;
+				is_skip=true;
+				break;
+			}
+		}
+		if(is_skip==false){
+			i = i+max_len-1;
+			while(i+1<vec.size()&&vec[i+1]>vec[i]){
+				i++;
+				max_len++;
+			}
+			ans = {i - max_len+1,i};
+		}
 	}
-	return max_val;
+	return ans;
 }
 
 int main(){
-	vector<int> input = {1,2,3,4};
-	// cout<<max_product_fun(input);
-	vector<int> res;
-	partial_sum(input.begin(),input.end(),back_inserter(res),multiplies<int>());
-	for(int x : res){
-		cout<<x<<" ";
-	}
-
+	vector<int> input = {1,2,3,4,3,4,5,6,7,8};
+	auto res = longest_increasing_array(input);
+	cout<<res.first<<" "<<res.second<<endl;
 }
