@@ -1,30 +1,47 @@
 #include <iostream>
-#include <deque>
 #include <vector>
-#include <cmath>
 using namespace std;
 
-vector<int> prime_func(int n){
-	int size = floor(0.5*(n-3))+1;
-	vector<int> res;
-	deque<bool> is_prime(size,true);
-	res.emplace_back(2);
-	
-	for(int i=0;i<size;i++){
-		if(is_prime[i]){
-			int p =  (i<<1)+3;
-			res.emplace_back(p);
-			for(int j = 2*i*i+6*i+3;j<size;j+=p){
-				is_prime[j]=false;
-			}
+
+void apply_sequence_fun(vector<int>* perm, vector<int>* vec){
+	for(int i=0;i<vec->size();i++){
+		if((*perm)[i]>=0){
+			int a = i;
+			int tmp = (*vec)[a];
+			do{
+				int next_a = (*perm)[a];
+				int next_tmp = (*vec)[next_a];
+				(*vec)[next_a] = tmp;
+				(*perm)[a]-=vec->size();
+				a = next_a;
+				tmp = next_tmp;
+			}while(a!=i);
 		}
 	}
-	return res;
+}
+
+void apply_fun(vector<int>* perm, vector<int>* vec){
+	for(int i=0;i<vec->size();i++){
+		if((*perm)[i]>=0){
+			int a = i;
+			int temp = (*vec)[i];
+			do{
+				int next_a = (*perm)[a];
+				int next_temp = (*vec)[next_a];
+				(*vec)[next_a] = temp;
+				(*perm)[a] -= perm->size();
+				a = next_a;
+				temp = next_temp;
+			}while(a!=i);
+		}
+	}
 }
 
 int main(){
-	auto res = prime_func(1000);
-	for(auto x : res){
+	vector<int> seq = {2,1,0,3};
+	vector<int> input = {11,12,13,14};
+	apply_fun(&seq,&input);
+	for(auto x : input){
 		cout<<x<<" ";
 	}
 }

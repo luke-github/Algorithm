@@ -21,7 +21,7 @@ void apply_sequence_fun(vector<int>* perm, vector<int>* vec){
 
 int main(){
 	vector<int> seq = {2,1,0,3};
-	vector<int> input = {1,2,3,4};
+	vector<int> input = {11,12,13,14};
 	apply_sequence_fun(&seq,&input);
 	for(auto x : input){
 		cout<<x<<" ";
