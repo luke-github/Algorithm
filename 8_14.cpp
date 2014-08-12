@@ -13,32 +13,28 @@ shared_ptr<ListNode<int>> copy_list(shared_ptr<ListNode<int>>& head){
 	if(!head){
 		return nullptr;
 	}
-	// 1st we need copy node
 	shared_ptr<ListNode<int>> p = head;
-	while(p->next){
-		shared_ptr<ListNode<int>> temp = make_shared<ListNode<int>>(ListNode<int>{p->data,p->next,nullptr});
+	// just copy list
+	while(p){
+		shared_ptr<list<int>> temp = make_shared<ListNode<int>>(ListNode<int>{p->data,p->next,nullptr});
 		p->next = temp;
 		p = temp->next;
 	}
-	// 2nd copy jump link
+	// copy jump link
 	p = head;
 	while(p){
 		if(p->jump){
-			p->next->jump = p->jump->next;
+			p->next->jump = p->jump-next;
 		}
 		p = p->next->next;
 	}
-	// restore next link
+	// recovery
 	p = head;
 	shared_ptr<ListNode<int>> res = p->next;
 	while(p->next){
-		shared_ptr<ListNode<int>> tmp = p->next;
+		auto tmp = p->next;
 		p->next = tmp->next;
 		p=tmp;
 	}
-	return res;
-}
-
-int main(){
 	
 }
