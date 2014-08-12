@@ -8,25 +8,32 @@ struct ListNode{
 	shared_ptr<ListNode<T>> next;
 };
 
-void advance_node(shared_ptr<ListNode<int>>* n){
-	cout<<(*n)->data<<endl;
-	(*n)=(*n)->next;
-	(*n)=(*n)->next;
-
+void zipped_fun(shared_ptr<ListNode<int>>& b, shared_ptr<ListNode<int>>* a){
+	shared_ptr<ListNode<int>> temp = (*a)->next;
+	(*a)->next = b;
+	(*a)=temp;
 }
 
-void operation(shared_ptr<ListNode<int>>& head){
-	advance_node(&head);
-	cout<<head->data<<endl;
+shared_ptr<ListNode<int>> zipped_link(shared_ptr<ListNode<int>>& head){
+	shared_ptr<ListNode<int>> slow =  head, fast = head,  pre_slow = head;
+	while(fast){
+		fast = fast->next;
+		if(fast){
+			pre_slow = slow;
+			slow = slow->next;
+			fast = fast->next;
+		}
+	}
+	if(!pre_slow)
+		return head;
+	pre_slow->next = nullptr;
+	shared_ptr<ListNode<int>> reverse = reverse_link_list(slow), cur = head;
+	while(cur&&reverse){
+		zipped_fun(reverse,&cur);
+		if(cur){
+			zipped_fun(cur,&reverse);
+		}
+	}
+	return head;
 }
 
-int main(){
-	shared_ptr<ListNode<int>> T1 = make_shared<ListNode<int>>(ListNode<int>{1,nullptr});
-	shared_ptr<ListNode<int>> T2 = make_shared<ListNode<int>>(ListNode<int>{2,nullptr});
-	shared_ptr<ListNode<int>> T3 = make_shared<ListNode<int>>(ListNode<int>{3,nullptr});
-	shared_ptr<ListNode<int>> T4 = make_shared<ListNode<int>>(ListNode<int>{4,nullptr});
-	T1->next = T2;
-	T2->next = T3;
-	T3->next = T4;
-	operation(T1);
-}
