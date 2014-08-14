@@ -1,36 +1,37 @@
-
+#include <stack>
 #include <iostream>
-#include <queue>
-#include <list>
+#include <vector>
+#include <memory>
 using namespace std;
 
-list<int> minimal_step(int n){
-	if(n==1){
-		return {1};
+template<class T>
+struct BTN{
+	T data;
+	shared_ptr<BTN<T>> left;
+	shared_ptr<BTN<T>> right;
+};
+
+vector<int> preorder_iteration(shared_ptr<BTN<int>>& root){
+	if(!root){
+		return {};
 	}
-	queue<list<int>> exp_lists;
-	exp_lists.emplace(1,1);
-	while(!exp_lists.empty()){
-		list<int> cur_exp = exp_lists.front();
-		exp_lists.pop();
-		for(int x: cur_exp){
-			int sum = x + cur_exp.back();
-			if(sum>n){
-				break;
-			}
-			list<int> new_exp(cur_exp);
-			new_exp.emplace_back(sum);
-			if(sum==n){
-				return new_exp;
-			}
-			exp_lists.emplace(new_exp);
+	stack<shared_ptr<BTN<int>>> s;
+	vector<int> res;
+	s.emplace(root);
+	while(!s.empty()){
+		auto cur = s.top();
+		s.pop();
+		res.emplace_back(cur->data);
+		if(cur->right){
+			s.emplace(cur->right);
+		}
+		if(cur->left){
+			s.emplace(cur->left);
 		}
 	}
+	return res;
 }
 
 int main(){
-	auto res = minimal_step(15);
-	for(int x : res){
-		cout<<x<<" ";
-	}
+	
 }
