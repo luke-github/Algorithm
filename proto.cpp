@@ -1,4 +1,4 @@
-// this solution is very smart
+
 #include <iostream>
 #include <queue>
 #include <list>
