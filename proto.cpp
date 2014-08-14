@@ -1,25 +1,36 @@
+// this solution is very smart
 #include <iostream>
-#include <vector>
 #include <queue>
+#include <list>
 using namespace std;
 
-struct TrafficElement{
-	bool operator < (const TrafficElement& that) const {
-		return volume < that.volume;
+list<int> minimal_step(int n){
+	if(n==1){
+		return {1};
 	}
-	bool operator == (const TrafficElement& that) const {
-		return volume ==  that.volume;
-	}
-	int time,volume;
-};
-
-void max_traffic_func(vector<TrafficElement>& vec,int w){
-	queue<TrafficElement> q;
-	for(int i=0;i<vec.size();i++){
-		q.emplace(vec[i]);
-		while(vec[i].time - q.front().time > w){
-			q.dequeue();
+	queue<list<int>> exp_lists;
+	exp_lists.emplace(1,1);
+	while(!exp_lists.empty()){
+		list<int> cur_exp = exp_lists.front();
+		exp_lists.pop();
+		for(int x: cur_exp){
+			int sum = x + cur_exp.back();
+			if(sum>n){
+				break;
+			}
+			list<int> new_exp(cur_exp);
+			new_exp.emplace_back(sum);
+			if(sum==n){
+				return new_exp;
+			}
+			exp_lists.emplace(new_exp);
 		}
-		cout<<q.max().volume<<endl;
+	}
+}
+
+int main(){
+	auto res = minimal_step(15);
+	for(int x : res){
+		cout<<x<<" ";
 	}
 }
