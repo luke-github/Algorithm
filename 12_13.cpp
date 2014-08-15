@@ -1,6 +1,6 @@
 #include <iostream>
-#include <sstream>
 #include <vector>
+#include <sstream>
 using namespace std;
 
 int kth_largest_element(istringstream* sin, int k){
@@ -17,9 +17,8 @@ int kth_largest_element(istringstream* sin, int k){
 	return vec[k-1];
 }
 
-
 int main(){
 	string input = "9 8 7 6 5 4 3 2 1";
 	istringstream ss(input);
-	cout<<kth_largest_element(&ss,3);
+	cout<<kth_largest_element(&ss,5);
 }
