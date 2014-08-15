@@ -14,7 +14,7 @@ int unknown_boundary_search(vector<int>& vec, int k){
 		p++;
 	}
 	int left = max(0,1<<(p-1)), right = (1<<p)-2;
-	while(left<right){
+	while(left<=right){
 		int mid = (left+right)/2;
 		int val = vec[mid];
 		if(val==k){
@@ -30,5 +30,5 @@ int unknown_boundary_search(vector<int>& vec, int k){
 
 int main(){
 	vector<int> input = {1,2,3,4,5,6,7,8,9};
-	cout<<unknown_boundary_search(input,5);
+	cout<<unknown_boundary_search(input,8);
 }
