@@ -1,27 +1,39 @@
 #include <iostream>
-#include <vector>
 #include <unordered_map>
+#include <unordered_set>
+#include <vector>
 using namespace std;
 
-int longest_distinct_subarray(const vector<int>& vec){
-	unordered_map<int,int> last_occurrence;
-	size_t first_index=0, ans=0;
-	for(int i=0;i<vec.size();i++){
-		auto res(last_occurrence.emplace(vec[i],i));
-		if(!res.second){
-			if(res.first->second >= first_index){
-				ans = max(ans,i - first_index);
-				first_index = res.first->second+1;
-			}
-			res.first->second = i;
-		}
+int range_algo(int a, unordered_set<int>& S, unordered_map<int,int>* L){
+	if(S.find(a)==S.end()){
+		return 0;
 	}
-	ans = max(ans,vec.size()-first_index);
-	return ans;
+	if(L->find(a)==L->end()){
+		(*L)[a] = range_algo(a-1,S,L)+1; 
+	}
+	return (*L)[a];
 }
 
+pair<int,int> longest_range(const vector<int>& vec){
+	unordered_set<int> S;
+	for(int x: vec){
+		S.emplace(x);
+	}
+	int max_len = 0;
+	pair<int,int> max_range(-1,0);
+	unordered_map<int,int> L;
+	for(int x : vec){
+		int len = range_algo(x,S,&L);
+		if(len > max_len){
+			max_len = len;
+			max_range = {x - len +1,x};
+		}
+	}
+	return max_range;
+}
 
 int main(){
-	vector<int> input = {1,2,3,1,2,3,4,5};
-	cout<<longest_distinct_subarray(input);
+	vector<int> input = {1,2,3,4,5,7,8,9,10,11,12,13};
+	auto res = longest_range(input);
+	cout<<res.first<<" "<<res.second<<endl;
 }
