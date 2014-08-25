@@ -1,33 +1,35 @@
 #include <iostream>
-#include <memory>
+#include <iterator>
+#include <vector>
 using namespace std;
 
-template<class T>
-struct BST{
-	T data;
-	shared_ptr<BST<T>> left;
-	shared_ptr<BST<T>> right;
-};
-
-void Reconstruct_Tree_Handler(shared_ptr<BST<int>>& root, shared_ptr<BST<int>>* p1, shared_ptr<BST<int>>* p2, shared_ptr<BST<int>>* pre){
-	if(!root){
-		return;
-	}
-	Reconstruct_Tree_Handler(root->left,p1,p2,pre);
-	if((*pre) && (*pre)->data > root->data){
-		*p2 = root;
-		if(!p1){
-			*p1 = *pre;
+int merge_algo(vector<int>& vec, int start, int mid, int end){
+	vector<int> sorted_vec;
+	int num_invert=0;
+	int left_start = start, right_start = mid;
+	while(left_start<mid&&right_start<end){
+		if(vec[left_start]<vec[right_start]){
+			sorted_vec.emplace_back(vec[left_start++]);
+		}else{	
+			num_invert += mid - left_start;
+			sorted_vec.emplace_back(vec[right_start++]);
 		}
 	}
-	*pre = root;
-	Reconstruct_Tree_Handler(root->right,p1,p2,pre);
+	copy(vec.begin()+left_start,vec.begin()+mid,back_inserter(sorted_vec));
+	copy(vec.begin()+right_start,vec.begin()+end,back_inserter(sorted_vec));
+	copy(sorted_vec.begin(),sorted_vec.end(),vec.begin()+start);
+	return num_invert;
 }
 
-void Reconstruct_Tree(shared_ptr<BST<int>>& head){
-	shared_ptr<BST<int>> p1 = nullptr, p2 = nullptr, pre = nullptr;
-	Reconstruct_Tree_Handler(head,&p1,&p2,&pre);
-	if(p1&&p2){
-		swap(p1->data,p2->data);
+int count_inversion_algo(vector<int>&vec, int start, int end){
+	if(end -  start <= 1){
+		return 0;
+	}else{
+		int mid =  (start+end)/2;
+		return count_inversion_algo(vec,start,mid) + count_inversion_algo(vec,mid,end) + merge_algo(vec,start,mid,end);
 	}
+}
+
+int count_inversion(vector<int>& vec){
+	return count_inversion_algo(vec,0,vec.size());
 }
