@@ -2,20 +2,15 @@
 #include <vector>
 using namespace std;
 
-int max_floor_handler(int c, int d, vector<vector<int>>* F){
-	if(c==0 || d==0){
-		return 0;
-	}else if(c==1){
-		return d;
-	}else{
-		if((*F)[c][d]==-1){
-			(*F)[c][d] = max_floor_handler(c-1,d-1,F)+1+max_floor_handler(c,d-1,F);
+int longest_nondecreasing_subarray(vector<int>& vec){
+	vector<int> res;
+	for(int x : vec){
+		auto it = upper_bound(res.begin(),res.end(),x);
+		if(it==res.end()){
+			res.emplace_back(x);
+		}else{
+			*it = x;
 		}
-		return (*F)[c][d];
 	}
-}
-
-int max_floor(int c, int d){
-	vector<vector<int>> F(c+1,vector<int>(d+1,-1));
-	return max_floor_handler(c,d,&F);
+	return res.size();
 }
