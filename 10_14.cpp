@@ -9,17 +9,11 @@ struct BSF_Node{
 	shared_ptr<BSF_Node<T>> left;
 	shared_ptr<BSF_Node<T>> right;
 };
-void generate_leave_list_handler(shared_ptr<BSF_Node<int>>& node, list<shared_ptr<BSF_Node<int>>>* result);
-list<shared_ptr<BSF_Node<int>>> generate_leave_list(shared_ptr<BSF_Node<int>>& head){
-	list<shared_ptr<BSF_Node<int>>> L;
-	generate_leave_list_handler(head,&L);
-	return L;
-}
 
-void generate_leave_list_handler(shared_ptr<BSF_Node<int>>& node, list<shared_ptr<BSF_Node<int>>>* result){
+void generate_leave_list_handler(shared_ptr<BSF_Node<int>> node, list<shared_ptr<BSF_Node<int>>>& result){
 	if(node){
 		if(!node->left&&!node->right){
-			result->emplace_back(node);
+			result.emplace_back(node);
 		}
 		else{
 			generate_leave_list_handler(node->left,result);
@@ -27,6 +21,14 @@ void generate_leave_list_handler(shared_ptr<BSF_Node<int>>& node, list<shared_pt
 		}
 	}
 }
+
+list<shared_ptr<BSF_Node<int>>> generate_leave_list(shared_ptr<BSF_Node<int>>& head){
+	list<shared_ptr<BSF_Node<int>>> L;
+	generate_leave_list_handler(head,L);
+	return L;
+}
+
+
 
 int main(){
 	shared_ptr<BSF_Node<int>> L1 = make_shared<BSF_Node<int>>(BSF_Node<int>{1,nullptr,nullptr});
